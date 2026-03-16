@@ -1,0 +1,10 @@
+[project]
+name = "egon-content"
+version = "0.1.0"
+description = "CLI tool to generate mental health Markdown articles for Logseq or Obsidian"
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.49.0",
+    "typer>=0.15.0",
+    "python-dotenv>=1.1.0",
+]
