@@ -31,4 +31,9 @@ def format(topic: str, body: str, disclaimer: str) -> tuple[str, str]:
 
 
 def _slugify(text: str) -> str:
-    return text.lower().strip().replace(" ", "-").replace("/", "-")
+    import re
+    text = text.lower().strip()
+    text = re.sub(r"[^\w\s-]", "", text)   # keep word chars, spaces, hyphens
+    text = re.sub(r"[\s_]+", "-", text)    # spaces/underscores → hyphens
+    text = re.sub(r"-+", "-", text)        # collapse consecutive hyphens
+    return text.strip("-")
