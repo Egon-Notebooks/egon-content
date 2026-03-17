@@ -11,5 +11,8 @@ dist/
 # uv
 .python-version
 
+# Editor
+.vscode/
+
 # macOS
 .DS_Store
