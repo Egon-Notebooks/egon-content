@@ -7,6 +7,8 @@ __pycache__/
 .venv/
 *.egg-info/
 dist/
+coverage.xml
+.coverage
 
 # uv
 .python-version
