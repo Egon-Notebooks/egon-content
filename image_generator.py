@@ -1,4 +1,7 @@
-"""AI image generation for article illustrations using DALL-E 3."""
+"""AI image generation for article illustrations using DALL-E 3.
+
+Edit prompts/image_style.txt to update the image style prompt.
+"""
 
 import base64
 import os
@@ -6,17 +9,12 @@ from pathlib import Path
 
 from openai import OpenAI, OpenAIError
 
-IMAGE_PROMPT_TEMPLATE = (
-    "A minimalistic, warm abstract illustration evoking the feeling of \"{topic}\". "
-    "Style: soft watercolour with warm earth tones — terracotta, sage green, amber, and cream. "
-    "Abstract flowing shapes, no text, no human faces, no hands, no identifiable objects. "
-    "Calm, gentle, and suitable for mental health educational content. "
-    "The image should feel safe, open, and hopeful."
-)
+_PROMPTS_DIR = Path(__file__).parent / "prompts"
+_IMAGE_PROMPT_TEMPLATE: str = (_PROMPTS_DIR / "image_style.txt").read_text(encoding="utf-8").strip()
 
 
 def build_image_prompt(topic: str) -> str:
-    return IMAGE_PROMPT_TEMPLATE.format(topic=topic)
+    return _IMAGE_PROMPT_TEMPLATE.format(topic=topic)
 
 
 def generate_image(topic: str, output_path: Path) -> None:

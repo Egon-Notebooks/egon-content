@@ -86,6 +86,19 @@ class TestLogseqFormatter:
         ]
         assert non_disclaimer_bullets == []
 
+    def test_image_embedded_when_provided(self):
+        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, "slug.png")
+        assert "- ![Managing social anxiety](../assets/slug.png)" in content
+
+    def test_image_is_first_bullet(self):
+        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, "slug.png")
+        bullets = [l for l in content.splitlines() if l.startswith("- ")]
+        assert "![" in bullets[0]
+
+    def test_no_image_when_none(self):
+        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, None)
+        assert "![" not in content
+
 
 # ---------------------------------------------------------------------------
 # Obsidian formatter
@@ -123,6 +136,20 @@ class TestObsidianFormatter:
 
     def test_disclaimer_at_end(self):
         assert self.content.strip().endswith(SAMPLE_DISCLAIMER)
+
+    def test_image_embedded_when_provided(self):
+        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, "slug.png")
+        assert "![Managing social anxiety](images/slug.png)" in content
+
+    def test_image_appears_after_h1(self):
+        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, "slug.png")
+        h1_pos = content.index(f"# {SAMPLE_TOPIC}")
+        img_pos = content.index("![Managing social anxiety]")
+        assert img_pos > h1_pos
+
+    def test_no_image_when_none(self):
+        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, None)
+        assert "![" not in content
 
     def test_yaml_title_escapes_double_quotes(self):
         topic_with_quotes = 'He said "hello"'
