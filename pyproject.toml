@@ -5,6 +5,7 @@ description = "CLI tool to generate mental health Markdown articles for Logseq o
 requires-python = ">=3.13"
 dependencies = [
     "anthropic>=0.49.0",
+    "openai>=1.70.0",
     "typer>=0.15.0",
     "python-dotenv>=1.1.0",
 ]

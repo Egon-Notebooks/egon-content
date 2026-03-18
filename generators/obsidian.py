@@ -6,7 +6,12 @@ Obsidian uses YAML frontmatter for metadata and prose paragraphs for content.
 from datetime import date
 
 
-def format(topic: str, body: str, disclaimer: str) -> tuple[str, str]:
+def format(
+    topic: str,
+    body: str,
+    disclaimer: str,
+    image_filename: str | None = None,
+) -> tuple[str, str]:
     """Return (filename, markdown_content) for an Obsidian note."""
     slug = _slugify(topic)
     today = date.today().isoformat()
@@ -24,10 +29,12 @@ def format(topic: str, body: str, disclaimer: str) -> tuple[str, str]:
         "---\n"
     )
 
-    # H1 title, then prose body, then disclaimer
+    image_block = f"![{topic}](images/{image_filename})\n\n" if image_filename else ""
+
     content = (
         f"{frontmatter}\n"
         f"# {topic}\n\n"
+        f"{image_block}"
         f"{body.strip()}\n\n"
         f"---\n\n"
         f"{disclaimer}\n"

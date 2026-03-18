@@ -3,7 +3,9 @@
 Usage examples:
     uv run main.py generate --app obsidian --topic "managing social anxiety"
     uv run main.py generate --app logseq --topic "Joy"
+    uv run main.py generate --app obsidian --topic "Joy" --no-image
     uv run main.py pack --app obsidian --pack basic-emotions
+    uv run main.py from-file --app obsidian --file my-topics.txt
     uv run main.py list-packs
 """
 
@@ -14,10 +16,13 @@ from enum import Enum
 import anthropic
 import typer
 from dotenv import load_dotenv
+from openai import OpenAIError
 
 from generators import logseq, obsidian
+from image_generator import generate_image
 from packs import PACKS
 from prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt
+from utils import parse_topics_file
 
 load_dotenv()
 
@@ -27,6 +32,13 @@ OUTPUT_ROOT = Path(__file__).parent / "generated_content"
 
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 1024
+
+# Image output subdirectory per app — these must match the relative paths
+# embedded in the Markdown by each formatter.
+IMAGE_SUBDIR = {
+    "obsidian": "images",   # referenced as images/<slug>.png in the note
+    "logseq": "assets",     # referenced as ../assets/<slug>.png from pages/
+}
 
 
 class App(str, Enum):
@@ -65,21 +77,45 @@ def _generate_body(client: anthropic.Anthropic, topic: str) -> str:
     return message.content[0].text
 
 
-def _generate_and_save(client: anthropic.Anthropic, app_name: App, topic: str) -> Path | None:
+def _generate_and_save(
+    client: anthropic.Anthropic,
+    app_name: App,
+    topic: str,
+    with_image: bool = True,
+) -> Path | None:
     formatter = logseq if app_name == App.logseq else obsidian
     filename, _ = formatter.format(topic, "", "")
+    slug = filename.removesuffix(".md")
     output_path = OUTPUT_ROOT / app_name.value / filename
+
     if output_path.exists():
         overwrite = typer.confirm(f"'{filename}' already exists. Overwrite?", default=True)
         if not overwrite:
             typer.echo("  Skipped.")
             return None
-    typer.echo(f"Generating: {topic!r} ...")
+
+    typer.echo(f"Generating article: {topic!r} ...")
     body = _generate_body(client, topic)
-    _, content = formatter.format(topic, body, DISCLAIMER)
+
+    image_filename: str | None = None
+    if with_image:
+        typer.echo(f"  Generating image ...")
+        image_filename = f"{slug}.png"
+        image_path = OUTPUT_ROOT / app_name.value / IMAGE_SUBDIR[app_name.value] / image_filename
+        try:
+            generate_image(topic, image_path)
+            typer.echo(f"  Image saved -> {image_path}")
+        except EnvironmentError as e:
+            typer.echo(f"  Warning: {e} Skipping image.", err=True)
+            image_filename = None
+        except OpenAIError as e:
+            typer.echo(f"  Warning: Image generation failed — {e}. Skipping image.", err=True)
+            image_filename = None
+
+    _, content = formatter.format(topic, body, DISCLAIMER, image_filename)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
-    typer.echo(f"  Saved -> {output_path}")
+    typer.echo(f"  Article saved -> {output_path}")
     return output_path
 
 
@@ -87,16 +123,18 @@ def _generate_and_save(client: anthropic.Anthropic, app_name: App, topic: str) -
 def generate(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     topic: str = typer.Option(..., "--topic", help="The mental health topic to write about"),
+    with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration"),
 ) -> None:
     """Generate a single article for a given topic."""
     client = _get_client()
-    _generate_and_save(client, app_name, topic)
+    _generate_and_save(client, app_name, topic, with_image)
 
 
 @app.command()
 def pack(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     pack_name: str = typer.Option(..., "--pack", help="Name of the topic pack to generate"),
+    with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration per article"),
 ) -> None:
     """Generate all articles in a named topic pack."""
     if pack_name not in PACKS:
@@ -108,7 +146,30 @@ def pack(
     typer.echo(f"Generating pack '{pack_name}' ({len(topics)} topics) for {app_name.value} ...\n")
     client = _get_client()
     for topic in topics:
-        _generate_and_save(client, app_name, topic)
+        _generate_and_save(client, app_name, topic, with_image)
+    typer.echo(f"\nDone. {len(topics)} articles written to {OUTPUT_ROOT / app_name.value}")
+
+
+@app.command(name="from-file")
+def from_file(
+    app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
+    file: Path = typer.Option(..., "--file", help="Path to a topics file (one topic per line)"),
+    with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration per article"),
+) -> None:
+    """Generate articles for all topics listed in a file."""
+    try:
+        topics = parse_topics_file(file)
+    except FileNotFoundError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(code=1)
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(code=1)
+
+    typer.echo(f"Found {len(topics)} topics in '{file}'. Generating for {app_name.value} ...\n")
+    client = _get_client()
+    for topic in topics:
+        _generate_and_save(client, app_name, topic, with_image)
     typer.echo(f"\nDone. {len(topics)} articles written to {OUTPUT_ROOT / app_name.value}")
 
 
