@@ -1,0 +1,116 @@
+"""
+Topic pack definitions.
+
+Each pack is a named collection of related mental health topics.
+Together, all packs form the "getting started" base — a curated collection of essential nodes for someone beginning a self-therapy journey.
+
+Add new packs or topics here directly.
+Run `uv run main.py generate-all` to generate the full base collection.
+"""
+
+PACKS: dict[str, list[str]] = {
+    "understanding-emotions": [
+        "What are emotions and why they matter",
+        "Joy and positive emotions",
+        "Sadness",
+        "Anger",
+        "Fear",
+        "Shame and guilt",
+        "Disgust",
+        "Surprise and awe",
+    ],
+    "anxiety-and-worry": [
+        "Understanding anxiety",
+        "Grounding techniques for anxiety",
+        "Breathing exercises for anxiety",
+        "Cognitive reframing",
+        "Coping with uncertainty",
+        "Managing worry",
+        "Social anxiety",
+        "Panic and panic attacks",
+    ],
+    "low-mood-and-depression": [
+        "Understanding low mood",
+        "Behavioural activation",
+        "Sleep hygiene and mood",
+        "Self-compassion",
+        "Finding motivation during low periods",
+        "Energy conservation when depressed",
+        "Negative thinking patterns",
+        "When to seek professional help",
+    ],
+    "stress-and-burnout": [
+        "Understanding stress",
+        "The stress response",
+        "Signs of burnout",
+        "Work-life balance",
+        "Setting limits at work",
+        "Recovering from burnout",
+    ],
+    "self-awareness": [
+        "Getting to know yourself",
+        "Identifying your values",
+        "Recognising your strengths",
+        "Understanding your triggers",
+        "The inner critic",
+        "Self-reflection practices",
+    ],
+    "self-care-foundations": [
+        "The importance of rest",
+        "Sleep and mental health",
+        "Nutrition and mental health",
+        "Movement and mood",
+        "Time in nature",
+        "Journalling for mental health",
+        "Building a daily routine",
+        "Digital wellbeing",
+    ],
+    "relationships-and-connection": [
+        "The importance of connection",
+        "Setting healthy boundaries",
+        "Attachment styles",
+        "Communication in relationships",
+        "Loneliness and connection",
+        "Navigating conflict",
+        "Asking for support",
+        "Recognising unhealthy relationship patterns",
+    ],
+    "grief-and-loss": [
+        "Understanding grief",
+        "Ambiguous loss",
+        "Anniversary reactions",
+        "Finding meaning after loss",
+        "Supporting someone who is grieving",
+    ],
+    "mindfulness-and-presence": [
+        "What is mindfulness",
+        "Breathing and present-moment awareness",
+        "The body scan",
+        "Mindful observation",
+        "Bringing mindfulness into daily life",
+        "Acceptance and letting go",
+    ],
+    "thinking-patterns": [
+        "How thoughts affect feelings",
+        "Common cognitive distortions",
+        "Rumination and how to interrupt it",
+        "Catastrophising",
+        "All-or-nothing thinking",
+        "Challenging unhelpful thoughts",
+    ],
+    "identity-and-self-worth": [
+        "Self-esteem and where it comes from",
+        "Imposter syndrome",
+        "Perfectionism",
+        "Body image and self-acceptance",
+        "Comparing yourself to others",
+    ],
+    "navigating-change": [
+        "Coping with change",
+        "Life transitions",
+        "Building resilience",
+        "Post-traumatic growth",
+        "Finding meaning in difficulty",
+        "Hope and future thinking",
+    ],
+}
