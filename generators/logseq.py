@@ -7,12 +7,7 @@ and expects content in its outline (bullet-point) format.
 from datetime import date
 
 
-def format(
-    topic: str,
-    body: str,
-    disclaimer: str,
-    image_filename: str | None = None,
-) -> tuple[str, str]:
+def format(topic: str, body: str, disclaimer: str) -> tuple[str, str]:
     """Return (filename, markdown_content) for a Logseq page."""
     slug = _slugify(topic)
     today = date.today().isoformat()
@@ -25,17 +20,13 @@ def format(
         f"tags:: mental-health\n"
     )
 
-    # Image bullet — Logseq images live in the graph's assets/ folder,
-    # one level above pages/, hence the ../assets/ relative path.
-    image_bullet = f"- ![{topic}](../assets/{image_filename})\n" if image_filename else ""
-
     # Logseq body: each paragraph as a top-level bullet
     bullet_paragraphs = "\n".join(
         f"- {para.strip()}" for para in body.strip().split("\n\n") if para.strip()
     )
     disclaimer_bullet = f"- {disclaimer}"
 
-    content = f"{properties}\n{image_bullet}{bullet_paragraphs}\n\n{disclaimer_bullet}\n"
+    content = f"{properties}\n{bullet_paragraphs}\n\n{disclaimer_bullet}\n"
     return filename, content
 
 
