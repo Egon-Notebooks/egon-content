@@ -1,3 +1,7 @@
+# Generated content (keep directory structure, ignore actual files)
+generated_content/**
+!generated_content/**/.gitkeep
+
 # Environment
 .env
 
