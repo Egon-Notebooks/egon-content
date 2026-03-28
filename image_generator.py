@@ -4,10 +4,14 @@ Edit prompts/image_style.txt to update the image style prompt.
 """
 
 import base64
+import io
 import os
 from pathlib import Path
 
+from PIL import Image
 from openai import OpenAI, OpenAIError
+
+_TARGET_SIZE = (1200, 675)
 
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _IMAGE_PROMPT_TEMPLATE: str = (_PROMPTS_DIR / "image_style.txt").read_text(encoding="utf-8").strip()
@@ -40,6 +44,8 @@ def generate_image(topic: str, output_path: Path) -> None:
         n=1,
     )
 
-    image_bytes = base64.b64decode(response.data[0].b64_json)
+    raw_bytes = base64.b64decode(response.data[0].b64_json)
+    image = Image.open(io.BytesIO(raw_bytes))
+    image = image.resize(_TARGET_SIZE, Image.LANCZOS)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_bytes(image_bytes)
+    image.save(output_path, format="WEBP")

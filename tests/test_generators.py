@@ -10,7 +10,7 @@ SAMPLE_DISCLAIMER = "_This is a disclaimer._"
 
 
 # ---------------------------------------------------------------------------
-# Shared slugify behaviour (tested via each formatter)
+# Shared slugify behavior (tested via each formatter)
 # ---------------------------------------------------------------------------
 
 class TestSlugify:

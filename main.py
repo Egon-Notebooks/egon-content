@@ -35,8 +35,8 @@ MAX_TOKENS = 1024
 # Image output subdirectory per app — these must match the relative paths
 # embedded in the Markdown by each formatter.
 IMAGE_SUBDIR = {
-    "obsidian": "images",   # referenced as images/<slug>.png in the note
-    "logseq": "assets",     # referenced as ../assets/<slug>.png from pages/
+    "obsidian": "images",   # referenced as images/<slug>.webp in the note
+    "logseq": "assets",     # referenced as ../assets/<slug>.webp from pages/
 }
 
 
@@ -85,7 +85,7 @@ def _generate_and_save(
     formatter = logseq if app_name == App.logseq else obsidian
     filename, _ = formatter.format(topic, "", "")
     slug = filename.removesuffix(".md")
-    output_path = OUTPUT_ROOT / app_name.value / filename
+    output_path = OUTPUT_ROOT / app_name.value / "nodes" / filename
 
     if output_path.exists():
         overwrite = typer.confirm(f"'{filename}' already exists. Overwrite?", default=True)
@@ -99,7 +99,7 @@ def _generate_and_save(
     image_filename: str | None = None
     if with_image:
         typer.echo(f"  Generating image ...")
-        image_filename = f"{slug}.png"
+        image_filename = f"{slug}.webp"
         image_path = OUTPUT_ROOT / app_name.value / IMAGE_SUBDIR[app_name.value] / image_filename
         try:
             generate_image(topic, image_path)
