@@ -21,7 +21,7 @@ from openai import OpenAIError
 from generators import logseq, obsidian
 from image_generator import generate_image
 from packs import PACKS
-from prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt
+from prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_body_and_tags
 
 load_dotenv()
 
@@ -53,7 +53,7 @@ def _get_client() -> anthropic.Anthropic:
     return anthropic.Anthropic(api_key=api_key)
 
 
-def _generate_body(client: anthropic.Anthropic, topic: str) -> str:
+def _generate_body(client: anthropic.Anthropic, topic: str) -> tuple[str, list[str]]:
     try:
         message = client.messages.create(
             model=MODEL,
@@ -73,7 +73,7 @@ def _generate_body(client: anthropic.Anthropic, topic: str) -> str:
     except anthropic.APIError as e:
         typer.echo(f"Error: API request failed — {e}", err=True)
         raise typer.Exit(code=1)
-    return message.content[0].text
+    return parse_body_and_tags(message.content[0].text)
 
 
 def _generate_and_save(
@@ -83,7 +83,7 @@ def _generate_and_save(
     with_image: bool = True,
 ) -> Path | None:
     formatter = logseq if app_name == App.logseq else obsidian
-    filename, _ = formatter.format(topic, "", "")
+    filename, _ = formatter.format(topic, "", "", [])
     slug = filename.removesuffix(".md")
     output_path = OUTPUT_ROOT / app_name.value / "nodes" / filename
 
@@ -94,7 +94,7 @@ def _generate_and_save(
             return None
 
     typer.echo(f"Generating article: {topic!r} ...")
-    body = _generate_body(client, topic)
+    body, tags = _generate_body(client, topic)
 
     image_filename: str | None = None
     if with_image:
@@ -111,7 +111,7 @@ def _generate_and_save(
             typer.echo(f"  Warning: Image generation failed — {e}. Skipping image.", err=True)
             image_filename = None
 
-    _, content = formatter.format(topic, body, DISCLAIMER)
+    _, content = formatter.format(topic, body, DISCLAIMER, tags)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
     typer.echo(f"  Article saved -> {output_path}")

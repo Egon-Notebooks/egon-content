@@ -63,7 +63,15 @@ class TestLogseqFormatter:
         assert "date::" in self.content
 
     def test_has_tags_property(self):
-        assert "tags:: mental-health" in self.content
+        assert "tags::" in self.content
+
+    def test_tags_with_values(self):
+        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, ["anxiety", "stress"])
+        assert "tags:: anxiety, stress" in content
+
+    def test_tags_empty(self):
+        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, [])
+        assert "tags:: \n" in content
 
     def test_no_title_property(self):
         assert "title::" not in self.content
@@ -115,8 +123,17 @@ class TestObsidianFormatter:
     def test_frontmatter_has_date(self):
         assert "date:" in self.content
 
-    def test_frontmatter_has_tags(self):
-        assert "- mental-health" in self.content
+    def test_frontmatter_has_tags_key(self):
+        assert "tags:" in self.content
+
+    def test_frontmatter_tags_with_values(self):
+        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, ["emotions", "anxiety"])
+        assert "  - emotions" in content
+        assert "  - anxiety" in content
+
+    def test_frontmatter_tags_empty(self):
+        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, [])
+        assert "tags: []" in content
 
     def test_h1_title_present(self):
         assert f"# {SAMPLE_TOPIC}" in self.content
@@ -162,3 +179,28 @@ class TestBuildUserPrompt:
         from prompts import build_user_prompt
         prompt = build_user_prompt("any topic")
         assert "safe messaging" in prompt.lower() or "guidelines" in prompt.lower()
+
+
+class TestParseBodyAndTags:
+    def test_extracts_tags(self):
+        from prompts import parse_body_and_tags
+        body, tags = parse_body_and_tags("Some article text.\nTAGS: emotions, anger")
+        assert body == "Some article text."
+        assert tags == ["emotions", "anger"]
+
+    def test_empty_tags_line(self):
+        from prompts import parse_body_and_tags
+        body, tags = parse_body_and_tags("Some article text.\nTAGS:")
+        assert body == "Some article text."
+        assert tags == []
+
+    def test_no_tags_line(self):
+        from prompts import parse_body_and_tags
+        body, tags = parse_body_and_tags("Some article text.")
+        assert body == "Some article text."
+        assert tags == []
+
+    def test_case_insensitive(self):
+        from prompts import parse_body_and_tags
+        _, tags = parse_body_and_tags("Body.\ntags: anxiety")
+        assert tags == ["anxiety"]

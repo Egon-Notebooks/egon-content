@@ -7,17 +7,18 @@ and expects content in its outline (bullet-point) format.
 from datetime import date
 
 
-def format(topic: str, body: str, disclaimer: str) -> tuple[str, str]:
+def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None) -> tuple[str, str]:
     """Return (filename, markdown_content) for a Logseq page."""
     slug = _slugify(topic)
     today = date.today().isoformat()
     filename = f"{slug}.md"
 
+    tags_value = ", ".join(tags) if tags else ""
     # Logseq properties block (no YAML fences — uses :: syntax)
     properties = (
         f"author:: Claude\n"
         f"date:: {today}\n"
-        f"tags:: mental-health\n"
+        f"tags:: {tags_value}\n"
     )
 
     # Logseq body: each paragraph as a top-level bullet

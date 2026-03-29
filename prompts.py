@@ -30,3 +30,18 @@ def build_user_prompt(topic: str) -> str:
         f"Write a mental health article about the following topic: {topic}\n\n"
         "Follow all safe messaging and formatting guidelines in your instructions."
     )
+
+
+def parse_body_and_tags(raw: str) -> tuple[str, list[str]]:
+    """Split Claude's response into (body, tags).
+
+    Expects the last line to be `TAGS: tag1, tag2` (or `TAGS:` for none).
+    If no TAGS line is found, returns the full text as body with no tags.
+    """
+    lines = raw.strip().splitlines()
+    if lines and lines[-1].upper().startswith("TAGS:"):
+        tag_line = lines[-1][len("TAGS:"):].strip()
+        tags = [t.strip() for t in tag_line.split(",") if t.strip()]
+        body = "\n".join(lines[:-1]).strip()
+        return body, tags
+    return raw.strip(), []
