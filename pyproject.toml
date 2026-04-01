@@ -1,3 +1,13 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["egon"]
+
+[tool.uv]
+package = true
+
 [project]
 name = "egon-content"
 version = "0.1.0"
@@ -11,6 +21,9 @@ dependencies = [
     "python-dotenv>=1.1.0",
 ]
 
+[project.scripts]
+egon = "egon.cli:app"
+
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",
@@ -18,11 +31,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=. --cov-report=term-missing --cov-report=xml"
+addopts = "--cov=egon --cov-report=term-missing --cov-report=xml"
 testpaths = ["tests"]
 
 [tool.coverage.run]
-omit = [
-    "tests/*",
-    ".venv/*",
-]
+source = ["egon"]
+omit = ["tests/*", ".venv/*"]
