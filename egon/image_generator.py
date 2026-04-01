@@ -9,12 +9,12 @@ import os
 from pathlib import Path
 
 from PIL import Image
-from openai import OpenAI, OpenAIError
+from openai import OpenAI
+
+_PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
+_IMAGE_PROMPT_TEMPLATE: str = (_PROMPTS_DIR / "image_style.txt").read_text(encoding="utf-8").strip()
 
 _TARGET_SIZE = (1200, 675)
-
-_PROMPTS_DIR = Path(__file__).parent / "prompts"
-_IMAGE_PROMPT_TEMPLATE: str = (_PROMPTS_DIR / "image_style.txt").read_text(encoding="utf-8").strip()
 
 
 def build_image_prompt(topic: str) -> str:

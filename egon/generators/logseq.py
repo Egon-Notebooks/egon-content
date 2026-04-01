@@ -6,22 +6,23 @@ and expects content in its outline (bullet-point) format.
 
 from datetime import date
 
+from egon.generators import _to_filename
 
-def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None) -> tuple[str, str]:
+
+def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None, aliases: list[str] | None = None) -> tuple[str, str]:
     """Return (filename, markdown_content) for a Logseq page."""
-    slug = _slugify(topic)
     today = date.today().isoformat()
-    filename = f"{slug}.md"
+    filename = f"{_to_filename(topic)}.md"
 
     tags_value = ", ".join(tags) if tags else ""
-    # Logseq properties block (no YAML fences — uses :: syntax)
+    alias_line = f"alias:: {', '.join(aliases)}\n" if aliases else ""
     properties = (
         f"author:: Claude\n"
         f"date:: {today}\n"
         f"tags:: {tags_value}\n"
+        f"{alias_line}"
     )
 
-    # Logseq body: each paragraph as a top-level bullet
     bullet_paragraphs = "\n".join(
         f"- {para.strip()}" for para in body.strip().split("\n\n") if para.strip()
     )
@@ -29,12 +30,3 @@ def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None
 
     content = f"{properties}\n{bullet_paragraphs}\n\n{disclaimer_bullet}\n"
     return filename, content
-
-
-def _slugify(text: str) -> str:
-    import re
-    text = text.lower().strip()
-    text = re.sub(r"[^\w\s-]", "", text)   # keep word chars, spaces, hyphens
-    text = re.sub(r"[\s_]+", "-", text)    # spaces/underscores → hyphens
-    text = re.sub(r"-+", "-", text)        # collapse consecutive hyphens
-    return text.strip("-")

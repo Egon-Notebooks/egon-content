@@ -1,12 +1,12 @@
-"""egon-content: Mental health Markdown page generator.
+"""egon: Mental health Markdown node generator.
 
 Usage examples:
-    uv run main.py generate --app obsidian --topic "managing social anxiety"
-    uv run main.py generate --app logseq --topic "Joy"
-    uv run main.py generate --app obsidian --topic "Joy" --no-image
-    uv run main.py pack --app obsidian --pack anxiety-and-worry
-    uv run main.py generate-all --app obsidian
-    uv run main.py list-packs
+    uv run egon generate --app obsidian --topic "managing social anxiety"
+    uv run egon generate --app logseq --topic "Joy"
+    uv run egon generate --app obsidian --topic "Joy" --no-image
+    uv run egon pack --app obsidian --pack anxiety-and-worry
+    uv run egon generate-all --app obsidian
+    uv run egon list-packs
 """
 
 import os
@@ -18,16 +18,17 @@ import typer
 from dotenv import load_dotenv
 from openai import OpenAIError
 
-from generators import logseq, obsidian
-from image_generator import generate_image
-from packs import PACKS
-from prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_body_and_tags
+from egon.generators import logseq, obsidian
+from egon.image_generator import generate_image
+from egon.linker import apply_wikilinks, get_aliases
+from egon.packs import PACKS
+from egon.prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_response
 
 load_dotenv()
 
 app = typer.Typer(help="Generate mental health Markdown articles for Logseq or Obsidian.")
 
-OUTPUT_ROOT = Path(__file__).parent / "generated_content"
+OUTPUT_ROOT = Path(__file__).parent.parent / "generated_content"
 
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 1024
@@ -73,7 +74,7 @@ def _generate_body(client: anthropic.Anthropic, topic: str) -> tuple[str, list[s
     except anthropic.APIError as e:
         typer.echo(f"Error: API request failed — {e}", err=True)
         raise typer.Exit(code=1)
-    return parse_body_and_tags(message.content[0].text)
+    return parse_response(message.content[0].text)
 
 
 def _generate_and_save(
@@ -83,7 +84,7 @@ def _generate_and_save(
     with_image: bool = True,
 ) -> Path | None:
     formatter = logseq if app_name == App.logseq else obsidian
-    filename, _ = formatter.format(topic, "", "", [])
+    filename, _ = formatter.format(topic, "", "")
     slug = filename.removesuffix(".md")
     output_path = OUTPUT_ROOT / app_name.value / "nodes" / filename
 
@@ -93,8 +94,10 @@ def _generate_and_save(
             typer.echo("  Skipped.")
             return None
 
+    all_topics = [t for topics in PACKS.values() for t in topics]
     typer.echo(f"Generating article: {topic!r} ...")
     body, tags = _generate_body(client, topic)
+    body = apply_wikilinks(body, all_topics, topic)
 
     image_filename: str | None = None
     if with_image:
@@ -111,7 +114,7 @@ def _generate_and_save(
             typer.echo(f"  Warning: Image generation failed — {e}. Skipping image.", err=True)
             image_filename = None
 
-    _, content = formatter.format(topic, body, DISCLAIMER, tags)
+    _, content = formatter.format(topic, body, DISCLAIMER, tags, get_aliases(topic))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
     typer.echo(f"  Article saved -> {output_path}")
@@ -175,7 +178,3 @@ def list_packs() -> None:
         for topic in topics:
             typer.echo(f"    - {topic}")
         typer.echo()
-
-
-if __name__ == "__main__":
-    app()

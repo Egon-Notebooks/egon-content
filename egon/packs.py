@@ -5,7 +5,7 @@ Each pack is a named collection of related mental health topics.
 Together, all packs form the "getting started" base — a curated collection of essential nodes for someone beginning a self-therapy journey.
 
 Add new packs or topics here directly.
-Run `uv run main.py generate-all` to generate the full base collection.
+Run `uv run egon generate-all` to generate the full base collection.
 """
 
 PACKS: dict[str, list[str]] = {

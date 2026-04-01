@@ -4,7 +4,7 @@ Prompt loader for article content generation.
 Safe messaging guidelines incorporated:
 - AFSP (American Foundation for Suicide Prevention) safe messaging guidelines
 - SAMHSA recommendations for mental health communication
-- Non-stigmatising, person-first language
+- Non-stigmatizing, person-first language
 - Hope-oriented framing with professional support pathways
 - No sensationalism, no detailed descriptions of harmful methods
 
@@ -13,7 +13,7 @@ Edit prompts/article_system.txt to update the system prompt.
 
 from pathlib import Path
 
-_PROMPTS_DIR = Path(__file__).parent / "prompts"
+_PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 
 SYSTEM_PROMPT: str = (_PROMPTS_DIR / "article_system.txt").read_text(encoding="utf-8")
 
@@ -32,7 +32,7 @@ def build_user_prompt(topic: str) -> str:
     )
 
 
-def parse_body_and_tags(raw: str) -> tuple[str, list[str]]:
+def parse_response(raw: str) -> tuple[str, list[str]]:
     """Split Claude's response into (body, tags).
 
     Expects the last line to be `TAGS: tag1, tag2` (or `TAGS:` for none).
