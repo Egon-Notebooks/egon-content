@@ -19,9 +19,10 @@ from dotenv import load_dotenv
 from openai import OpenAIError
 
 from egon.generators import logseq, obsidian
+from egon.graph import build_graph, compute_report, format_report, plot_graph, save_graph_data, save_report
 from egon.image_generator import generate_image
 from egon.linker import apply_wikilinks, get_aliases
-from egon.packs import PACKS
+from egon.packs import BASE_PACKS, PACKS
 from egon.prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_response
 
 load_dotenv()
@@ -82,11 +83,17 @@ def _generate_and_save(
     app_name: App,
     topic: str,
     with_image: bool = True,
+    dry_run: bool = False,
 ) -> Path | None:
     formatter = logseq if app_name == App.logseq else obsidian
     filename, _ = formatter.format(topic, "", "")
     slug = filename.removesuffix(".md")
     output_path = OUTPUT_ROOT / app_name.value / "nodes" / filename
+
+    if dry_run:
+        status = "(exists)" if output_path.exists() else "(new)"
+        typer.echo(f"  [dry-run] {filename} {status}")
+        return None
 
     if output_path.exists():
         overwrite = typer.confirm(f"'{filename}' already exists. Overwrite?", default=True)
@@ -101,7 +108,7 @@ def _generate_and_save(
 
     image_filename: str | None = None
     if with_image:
-        typer.echo(f"  Generating image ...")
+        typer.echo("  Generating image ...")
         image_filename = f"{slug}.webp"
         image_path = OUTPUT_ROOT / app_name.value / IMAGE_SUBDIR[app_name.value] / image_filename
         try:
@@ -126,10 +133,11 @@ def generate(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     topic: str = typer.Option(..., "--topic", help="The mental health topic to write about"),
     with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Preview what would be generated without making API calls"),
 ) -> None:
     """Generate a single article for a given topic."""
     client = _get_client()
-    _generate_and_save(client, app_name, topic, with_image)
+    _generate_and_save(client, app_name, topic, with_image, dry_run)
 
 
 @app.command()
@@ -137,6 +145,7 @@ def pack(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     pack_name: str = typer.Option(..., "--pack", help="Name of the topic pack to generate"),
     with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration per article"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Preview what would be generated without making API calls"),
 ) -> None:
     """Generate all articles in a named topic pack."""
     if pack_name not in PACKS:
@@ -148,7 +157,7 @@ def pack(
     typer.echo(f"Generating pack '{pack_name}' ({len(topics)} topics) for {app_name.value} ...\n")
     client = _get_client()
     for topic in topics:
-        _generate_and_save(client, app_name, topic, with_image)
+        _generate_and_save(client, app_name, topic, with_image, dry_run)
     typer.echo(f"\nDone. {len(topics)} articles written to {OUTPUT_ROOT / app_name.value}")
 
 
@@ -156,24 +165,67 @@ def pack(
 def generate_all(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration per article"),
+    all_packs: bool = typer.Option(False, "--all-packs", help="Include supplementary packs, not just the base graph"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Preview what would be generated without making API calls"),
 ) -> None:
-    """Generate the full base collection — all topics across all packs."""
-    total_topics = sum(len(topics) for topics in PACKS.values())
-    typer.echo(f"Generating full base collection ({len(PACKS)} packs, {total_topics} topics) for {app_name.value} ...\n")
+    """Generate the base graph — or all packs with --all-packs."""
+    packs_to_run = PACKS if all_packs else {k: v for k, v in PACKS.items() if k in BASE_PACKS}
+    label = "all packs" if all_packs else "base graph"
+    total_topics = sum(len(topics) for topics in packs_to_run.values())
+    typer.echo(f"Generating {label} ({len(packs_to_run)} packs, {total_topics} topics) for {app_name.value} ...\n")
     client = _get_client()
-    for pack_name, topics in PACKS.items():
+    for pack_name, topics in packs_to_run.items():
         typer.echo(f"--- Pack: {pack_name} ---")
         for topic in topics:
-            _generate_and_save(client, app_name, topic, with_image)
+            _generate_and_save(client, app_name, topic, with_image, dry_run)
         typer.echo()
     typer.echo(f"Done. {total_topics} articles written to {OUTPUT_ROOT / app_name.value}")
+
+
+@app.command(name="graph-report")
+def graph_report(
+    app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
+) -> None:
+    """Analyse the generated node graph and print structural metrics."""
+    nodes_dir = OUTPUT_ROOT / app_name.value / "nodes"
+    if not nodes_dir.exists() or not any(nodes_dir.glob("*.md")):
+        typer.echo(f"No nodes found in {nodes_dir}. Generate some content first.", err=True)
+        raise typer.Exit(code=1)
+    graph = build_graph(nodes_dir)
+    report = compute_report(graph)
+    text = format_report(report)
+    typer.echo(text)
+
+    out_dir = OUTPUT_ROOT / app_name.value
+    report_path = out_dir / "graph-report.txt"
+    data_path = out_dir / "graph-data.txt"
+    plot_path = out_dir / "graph-plot.pdf"
+
+    save_report(report, report_path)
+    typer.echo(f"\nReport saved -> {report_path}")
+
+    save_graph_data(graph, data_path)
+    typer.echo(f"Data saved   -> {data_path}")
+
+    plot_graph(graph, plot_path)
+    typer.echo(f"Plot saved   -> {plot_path}")
 
 
 @app.command(name="list-packs")
 def list_packs() -> None:
     """List all available topic packs and their topics."""
-    typer.echo("Available packs:\n")
+    typer.echo("Base graph packs:\n")
     for pack_name, topics in PACKS.items():
+        if pack_name not in BASE_PACKS:
+            continue
+        typer.echo(f"  {pack_name}")
+        for topic in topics:
+            typer.echo(f"    - {topic}")
+        typer.echo()
+    typer.echo("Supplementary packs:\n")
+    for pack_name, topics in PACKS.items():
+        if pack_name in BASE_PACKS:
+            continue
         typer.echo(f"  {pack_name}")
         for topic in topics:
             typer.echo(f"    - {topic}")
