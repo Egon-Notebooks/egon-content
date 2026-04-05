@@ -56,9 +56,10 @@ def get_aliases(topic: str) -> list[str]:
 def apply_wikilinks(body: str, all_topics: list[str], current_topic: str) -> str:
     """Return body with topic titles (and aliases) wrapped in [[...]].
 
-    Matching is case-insensitive and whole-word. When the matched text differs
-    in case from the canonical title, a piped link [[canonical|matched]] is used
-    so the page resolves correctly while preserving the original display text.
+    Only the first occurrence of each canonical topic is linked (first-mention
+    rule). Matching is case-insensitive and whole-word. When the matched text
+    differs in case from the canonical title, a piped link [[canonical|matched]]
+    is used so the page resolves correctly while preserving the display text.
     The current topic and its aliases are excluded to avoid self-links.
     """
     current_lower = current_topic.lower()
@@ -78,10 +79,13 @@ def apply_wikilinks(body: str, all_topics: list[str], current_topic: str) -> str
             candidates.append((topic, topic))
     candidates.sort(key=lambda x: len(x[0]), reverse=True)
 
-    # Collect all non-overlapping match spans.
+    # Collect the first non-overlapping match per canonical topic.
+    linked: set[str] = set()  # canonical titles already linked
     spans: list[tuple[int, int, str]] = []  # (start, end, replacement)
 
     for phrase, canonical in candidates:
+        if canonical in linked:
+            continue
         pattern = re.compile(r'\b' + re.escape(phrase) + r'\b', re.IGNORECASE)
         for m in pattern.finditer(body):
             start, end = m.start(), m.end()
@@ -93,6 +97,8 @@ def apply_wikilinks(body: str, all_topics: list[str], current_topic: str) -> str
             else:
                 replacement = f'[[{canonical}|{matched}]]'
             spans.append((start, end, replacement))
+            linked.add(canonical)
+            break  # first mention only
 
     if not spans:
         return body
