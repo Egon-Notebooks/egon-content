@@ -1,6 +1,9 @@
 # Generated content (keep directory structure, ignore actual files)
 generated_content/**
 !generated_content/**/.gitkeep
+!generated_content/**/graph-report.txt
+!generated_content/**/graph-data.txt
+!generated_content/**/graph-plot.pdf
 
 # Environment
 .env

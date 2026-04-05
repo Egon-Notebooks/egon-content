@@ -1,0 +1,43 @@
+Graph report
+============
+Nodes:               100
+Edges:               163
+Avg degree:          3.26
+Density:             0.0329
+Clustering coeff:    0.1610
+Connected components:14
+Orphan nodes:        13
+
+Orphans:
+  - Attachment styles
+  - Communication in relationships
+  - Comparing yourself to others
+  - Energy conservation when depressed
+  - Hope and future thinking
+  - How thoughts affect feelings
+  - Identifying your values
+  - Journaling for mental health
+  - Movement and mood
+  - Navigating conflict
+  - Negative thinking patterns
+  - Panic and panic attacks
+  - Self-reflection practices
+
+Most linked (top 10):
+   33  Understanding stress
+   20  Understanding anxiety
+   17  Self-compassion
+   13  Building resilience
+   11  Setting healthy boundaries
+   10  Understanding trauma
+   10  Understanding low mood
+    9  Understanding grief
+    9  Perfectionism
+    8  Fear
+
+Top bridge concepts (betweenness centrality):
+  0.2680  Understanding stress
+  0.1792  Understanding anxiety
+  0.1440  Self-compassion
+  0.1228  Understanding trauma
+  0.0752  Understanding grief

@@ -1,0 +1,576 @@
+Graph adjacency list
+====================
+
+Understanding stress  (degree 35)
+  → Agreeableness
+  → Breathing and present-moment awareness
+  → Bringing mindfulness into daily life
+  → Building a daily routine
+  → Building resilience
+  → Complex trauma and childhood experiences
+  → Conscientiousness
+  → Coping with uncertainty
+  → Extraversion and introversion
+  → Finding motivation during low periods
+  → Journaling for mental health
+  → Neuroticism and emotional stability
+  → Nutrition and mental health
+  → Perfectionism
+  → Personality and mental health
+  → Recovering from burnout
+  → Rumination and how to interrupt it
+  → Setting limits at work
+  → Signs of burnout
+  → Sleep and mental health
+  → Sleep hygiene and mood
+  → Surprise and awe
+  → The body scan
+  → The importance of connection
+  → The importance of rest
+  → The role of relationships in healing
+  → The stress response
+  → Time in nature
+  → Trauma and memory
+  → Understanding anxiety
+  → Understanding low mood
+  → Understanding your own personality
+  → Understanding your triggers
+  → What is mindfulness
+  → When to seek professional help
+
+Understanding anxiety  (degree 29)
+  → Agreeableness
+  → Anniversary reactions
+  → Breathing and present-moment awareness
+  → Breathing exercises for anxiety
+  → Bringing mindfulness into daily life
+  → Building safety after trauma
+  → Common cognitive distortions
+  → Conscientiousness
+  → Coping with change
+  → Coping with uncertainty
+  → Disgust
+  → Extraversion and introversion
+  → Grounding techniques for anxiety
+  → Grounding techniques for trauma
+  → How thoughts affect feelings
+  → Life transitions
+  → Movement and mood
+  → Neuroticism and emotional stability
+  → Openness to experience
+  → Perfectionism
+  → Personality and mental health
+  → Rumination and how to interrupt it
+  → Social anxiety
+  → The importance of connection
+  → Time in nature
+  → Understanding stress
+  → Understanding trauma
+  → Understanding your triggers
+  → What is mindfulness
+
+Self-compassion  (degree 17)
+  → Acceptance and letting go
+  → Building a daily routine
+  → Complex trauma and childhood experiences
+  → Conscientiousness
+  → Disgust
+  → Energy conservation when depressed
+  → Finding meaning after loss
+  → Getting to know yourself
+  → Perfectionism
+  → Personality and mental health
+  → Self-compassion in trauma recovery
+  → Self-esteem and where it comes from
+  → Self-reflection practices
+  → Setting healthy boundaries
+  → Shame and guilt
+  → The inner critic
+  → Understanding your own personality
+
+Understanding grief  (degree 14)
+  → Acceptance and letting go
+  → Ambiguous loss
+  → Anger
+  → Anniversary reactions
+  → Coping with change
+  → Finding meaning after loss
+  → Finding motivation during low periods
+  → Life transitions
+  → Post-traumatic growth
+  → Sadness
+  → Supporting someone who is grieving
+  → The importance of connection
+  → Understanding low mood
+  → When to seek professional help
+
+Setting healthy boundaries  (degree 12)
+  → Agreeableness
+  → Cognitive reframing
+  → Digital wellbeing
+  → Extraversion and introversion
+  → Getting to know yourself
+  → Recovering from burnout
+  → Self-compassion
+  → Setting limits at work
+  → Shame and guilt
+  → Signs of burnout
+  → The Big Five personality traits
+  → Work-life balance
+
+Understanding low mood  (degree 11)
+  → Behavioral activation
+  → Bringing mindfulness into daily life
+  → Extraversion and introversion
+  → Joy and positive emotions
+  → Movement and mood
+  → Personality and mental health
+  → The importance of connection
+  → Time in nature
+  → Understanding grief
+  → Understanding stress
+  → When to seek professional help
+
+Building resilience  (degree 10)
+  → Coping with change
+  → Coping with uncertainty
+  → Joy and positive emotions
+  → Neuroticism and emotional stability
+  → Personality and mental health
+  → Post-traumatic growth
+  → Recognizing your strengths
+  → Sleep and mental health
+  → The importance of connection
+  → Understanding stress
+
+Understanding trauma  (degree 10)
+  → Building safety after trauma
+  → Complex trauma and childhood experiences
+  → Grounding techniques for trauma
+  → How trauma affects the body
+  → Post-traumatic growth
+  → Self-compassion in trauma recovery
+  → Trauma and memory
+  → Trauma responses and the nervous system
+  → Understanding anxiety
+  → When to seek trauma-informed support
+
+Fear  (degree 9)
+  → Agreeableness
+  → Anger
+  → Asking for support
+  → Attachment styles
+  → Imposter syndrome
+  → Openness to experience
+  → Panic and panic attacks
+  → Setting limits at work
+  → Social anxiety
+
+Shame and guilt  (degree 8)
+  → Anger
+  → Complex trauma and childhood experiences
+  → Disgust
+  → How thoughts affect feelings
+  → Self-compassion
+  → Setting healthy boundaries
+  → Signs of burnout
+  → The role of relationships in healing
+
+Time in nature  (degree 8)
+  → How trauma affects the body
+  → Loneliness and connection
+  → Recovering from burnout
+  → Self-compassion in trauma recovery
+  → Understanding anxiety
+  → Understanding low mood
+  → Understanding stress
+  → Work-life balance
+
+Sadness  (degree 7)
+  → Anger
+  → Anniversary reactions
+  → Disgust
+  → Neuroticism and emotional stability
+  → Rumination and how to interrupt it
+  → Understanding grief
+  → Understanding your triggers
+
+Personality and mental health  (degree 7)
+  → Building resilience
+  → Conscientiousness
+  → Neuroticism and emotional stability
+  → Self-compassion
+  → Understanding anxiety
+  → Understanding low mood
+  → Understanding stress
+
+Neuroticism and emotional stability  (degree 7)
+  → Building resilience
+  → Cognitive reframing
+  → Personality and mental health
+  → Sadness
+  → The Big Five personality traits
+  → Understanding anxiety
+  → Understanding stress
+
+The Big Five personality traits  (degree 7)
+  → Agreeableness
+  → Conscientiousness
+  → Extraversion and introversion
+  → Neuroticism and emotional stability
+  → Openness to experience
+  → Setting healthy boundaries
+  → Understanding your own personality
+
+Conscientiousness  (degree 6)
+  → Perfectionism
+  → Personality and mental health
+  → Self-compassion
+  → The Big Five personality traits
+  → Understanding anxiety
+  → Understanding stress
+
+Perfectionism  (degree 6)
+  → Conscientiousness
+  → Mindful observation
+  → Self-compassion
+  → The inner critic
+  → Understanding anxiety
+  → Understanding stress
+
+Anger  (degree 5)
+  → Fear
+  → Sadness
+  → Shame and guilt
+  → Understanding grief
+  → Understanding your triggers
+
+Disgust  (degree 5)
+  → Sadness
+  → Self-compassion
+  → Self-esteem and where it comes from
+  → Shame and guilt
+  → Understanding anxiety
+
+The importance of connection  (degree 5)
+  → Building resilience
+  → Understanding anxiety
+  → Understanding grief
+  → Understanding low mood
+  → Understanding stress
+
+Extraversion and introversion  (degree 5)
+  → Setting healthy boundaries
+  → The Big Five personality traits
+  → Understanding anxiety
+  → Understanding low mood
+  → Understanding stress
+
+Agreeableness  (degree 5)
+  → Fear
+  → Setting healthy boundaries
+  → The Big Five personality traits
+  → Understanding anxiety
+  → Understanding stress
+
+Complex trauma and childhood experiences  (degree 5)
+  → Self-compassion
+  → Self-esteem and where it comes from
+  → Shame and guilt
+  → Understanding stress
+  → Understanding trauma
+
+When to seek professional help  (degree 4)
+  → Life transitions
+  → Understanding grief
+  → Understanding low mood
+  → Understanding stress
+
+Getting to know yourself  (degree 4)
+  → Self-compassion
+  → Self-reflection practices
+  → Setting healthy boundaries
+  → Understanding your own personality
+
+Understanding your triggers  (degree 4)
+  → Anger
+  → Sadness
+  → Understanding anxiety
+  → Understanding stress
+
+Rumination and how to interrupt it  (degree 4)
+  → Sadness
+  → Surprise and awe
+  → Understanding anxiety
+  → Understanding stress
+
+The stress response  (degree 4)
+  → Grounding techniques for anxiety
+  → How trauma affects the body
+  → Trauma and memory
+  → Understanding stress
+
+Self-compassion in trauma recovery  (degree 4)
+  → Self-compassion
+  → The inner critic
+  → Time in nature
+  → Understanding trauma
+
+Joy and positive emotions  (degree 4)
+  → Building resilience
+  → Understanding low mood
+  → What are emotions and why they matter
+  → Work-life balance
+
+Understanding your own personality  (degree 4)
+  → Getting to know yourself
+  → Self-compassion
+  → The Big Five personality traits
+  → Understanding stress
+
+Coping with uncertainty  (degree 3)
+  → Building resilience
+  → Understanding anxiety
+  → Understanding stress
+
+Life transitions  (degree 3)
+  → Understanding anxiety
+  → Understanding grief
+  → When to seek professional help
+
+Coping with change  (degree 3)
+  → Building resilience
+  → Understanding anxiety
+  → Understanding grief
+
+Signs of burnout  (degree 3)
+  → Setting healthy boundaries
+  → Shame and guilt
+  → Understanding stress
+
+Self-esteem and where it comes from  (degree 3)
+  → Complex trauma and childhood experiences
+  → Disgust
+  → Self-compassion
+
+Common cognitive distortions  (degree 3)
+  → All-or-nothing thinking
+  → Catastrophizing
+  → Understanding anxiety
+
+Recovering from burnout  (degree 3)
+  → Setting healthy boundaries
+  → Time in nature
+  → Understanding stress
+
+The inner critic  (degree 3)
+  → Perfectionism
+  → Self-compassion
+  → Self-compassion in trauma recovery
+
+Trauma and memory  (degree 3)
+  → The stress response
+  → Understanding stress
+  → Understanding trauma
+
+Openness to experience  (degree 3)
+  → Fear
+  → The Big Five personality traits
+  → Understanding anxiety
+
+Setting limits at work  (degree 3)
+  → Fear
+  → Setting healthy boundaries
+  → Understanding stress
+
+Work-life balance  (degree 3)
+  → Joy and positive emotions
+  → Setting healthy boundaries
+  → Time in nature
+
+Post-traumatic growth  (degree 3)
+  → Building resilience
+  → Understanding grief
+  → Understanding trauma
+
+How trauma affects the body  (degree 3)
+  → The stress response
+  → Time in nature
+  → Understanding trauma
+
+Bringing mindfulness into daily life  (degree 3)
+  → Understanding anxiety
+  → Understanding low mood
+  → Understanding stress
+
+Anniversary reactions  (degree 3)
+  → Sadness
+  → Understanding anxiety
+  → Understanding grief
+
+Cognitive reframing  (degree 2)
+  → Neuroticism and emotional stability
+  → Setting healthy boundaries
+
+Self-reflection practices  (degree 2)
+  → Getting to know yourself
+  → Self-compassion
+
+Building safety after trauma  (degree 2)
+  → Understanding anxiety
+  → Understanding trauma
+
+All-or-nothing thinking  (degree 2)
+  → Common cognitive distortions
+  → Negative thinking patterns
+
+Catastrophizing  (degree 2)
+  → Common cognitive distortions
+  → Negative thinking patterns
+
+Building a daily routine  (degree 2)
+  → Self-compassion
+  → Understanding stress
+
+Surprise and awe  (degree 2)
+  → Rumination and how to interrupt it
+  → Understanding stress
+
+Social anxiety  (degree 2)
+  → Fear
+  → Understanding anxiety
+
+How thoughts affect feelings  (degree 2)
+  → Shame and guilt
+  → Understanding anxiety
+
+Grounding techniques for trauma  (degree 2)
+  → Understanding anxiety
+  → Understanding trauma
+
+Breathing and present-moment awareness  (degree 2)
+  → Understanding anxiety
+  → Understanding stress
+
+Finding meaning after loss  (degree 2)
+  → Self-compassion
+  → Understanding grief
+
+Finding motivation during low periods  (degree 2)
+  → Understanding grief
+  → Understanding stress
+
+The role of relationships in healing  (degree 2)
+  → Shame and guilt
+  → Understanding stress
+
+What is mindfulness  (degree 2)
+  → Understanding anxiety
+  → Understanding stress
+
+Sleep and mental health  (degree 2)
+  → Building resilience
+  → Understanding stress
+
+Negative thinking patterns  (degree 2)
+  → All-or-nothing thinking
+  → Catastrophizing
+
+Movement and mood  (degree 2)
+  → Understanding anxiety
+  → Understanding low mood
+
+Grounding techniques for anxiety  (degree 2)
+  → The stress response
+  → Understanding anxiety
+
+Acceptance and letting go  (degree 2)
+  → Self-compassion
+  → Understanding grief
+
+Panic and panic attacks  (degree 1)
+  → Fear
+
+Trauma responses and the nervous system  (degree 1)
+  → Understanding trauma
+
+Behavioral activation  (degree 1)
+  → Understanding low mood
+
+Loneliness and connection  (degree 1)
+  → Time in nature
+
+The body scan  (degree 1)
+  → Understanding stress
+
+Journaling for mental health  (degree 1)
+  → Understanding stress
+
+Nutrition and mental health  (degree 1)
+  → Understanding stress
+
+Sleep hygiene and mood  (degree 1)
+  → Understanding stress
+
+Imposter syndrome  (degree 1)
+  → Fear
+
+Ambiguous loss  (degree 1)
+  → Understanding grief
+
+Mindful observation  (degree 1)
+  → Perfectionism
+
+Digital wellbeing  (degree 1)
+  → Setting healthy boundaries
+
+The importance of rest  (degree 1)
+  → Understanding stress
+
+What are emotions and why they matter  (degree 1)
+  → Joy and positive emotions
+
+When to seek trauma-informed support  (degree 1)
+  → Understanding trauma
+
+Asking for support  (degree 1)
+  → Fear
+
+Breathing exercises for anxiety  (degree 1)
+  → Understanding anxiety
+
+Recognizing your strengths  (degree 1)
+  → Building resilience
+
+Supporting someone who is grieving  (degree 1)
+  → Understanding grief
+
+Energy conservation when depressed  (degree 1)
+  → Self-compassion
+
+Attachment styles  (degree 1)
+  → Fear
+
+Recognizing unhealthy relationship patterns  (degree 0)
+
+Challenging unhelpful thoughts  (degree 0)
+
+Comparing yourself to others  (degree 0)
+
+Can personality change  (degree 0)
+
+Identifying your values  (degree 0)
+
+Navigating conflict  (degree 0)
+
+Hope and future thinking  (degree 0)
+
+Body image and self-acceptance  (degree 0)
+
+Communication in relationships  (degree 0)
+
+Managing worry  (degree 0)
+
+Finding meaning in difficulty  (degree 0)
+
+What is personality  (degree 0)
