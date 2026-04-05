@@ -99,8 +99,8 @@ class TestLogseqFormatter:
     def test_empty_body_produces_no_bullets(self):
         _, content = logseq.format(SAMPLE_TOPIC, "", SAMPLE_DISCLAIMER)
         non_disclaimer_bullets = [
-            l for l in content.splitlines()
-            if l.startswith("- ") and SAMPLE_DISCLAIMER not in l
+            line for line in content.splitlines()
+            if line.startswith("- ") and SAMPLE_DISCLAIMER not in line
         ]
         assert non_disclaimer_bullets == []
 
@@ -172,13 +172,13 @@ class TestObsidianFormatter:
     def test_yaml_title_escapes_double_quotes(self):
         topic_with_quotes = 'He said "hello"'
         _, content = obsidian.format(topic_with_quotes, "", "")
-        frontmatter_line = next(l for l in content.splitlines() if l.startswith("title:"))
+        frontmatter_line = next(line for line in content.splitlines() if line.startswith("title:"))
         inner = frontmatter_line[len('title: "'):-1]
         assert '\\"' in inner
 
     def test_yaml_title_escapes_backslash(self):
         _, content = obsidian.format("path\\topic", "", "")
-        frontmatter_line = next(l for l in content.splitlines() if l.startswith("title:"))
+        frontmatter_line = next(line for line in content.splitlines() if line.startswith("title:"))
         assert "\\\\" in frontmatter_line
 
 
@@ -242,9 +242,11 @@ class TestApplyWikilinks:
         assert "[[Fear]]" not in result
         assert result == "Fear is a common response."
 
-    def test_no_double_linking(self):
+    def test_first_mention_only(self):
+        # "Anger" appears twice — only the first should be linked
         result = apply_wikilinks("Anger and anger again.", self.ALL_TOPICS, "Fear")
-        assert result.count("[[") == 2
+        assert result.count("[[") == 1
+        assert "[[Anger]]" in result
 
     def test_no_match_returns_unchanged(self):
         body = "This text mentions nothing relevant."

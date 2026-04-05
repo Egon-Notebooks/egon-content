@@ -2,10 +2,8 @@
 
 import base64
 import io
-import os
 import pytest
 from unittest.mock import MagicMock, patch
-from pathlib import Path
 from PIL import Image as PILImage
 
 from egon.image_generator import build_image_prompt, generate_image
