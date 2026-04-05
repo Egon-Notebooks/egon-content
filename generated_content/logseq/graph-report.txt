@@ -32,7 +32,7 @@ Most linked (top 10):
    10  Building resilience
    10  Understanding trauma
     9  Fear
-    8  Shame and guilt
+    8  Time in nature
 
 Top bridge concepts (betweenness centrality):
   0.2844  Understanding stress

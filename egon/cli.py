@@ -199,7 +199,7 @@ def graph_report(
     out_dir = OUTPUT_ROOT / app_name.value
     report_path = out_dir / "graph-report.txt"
     data_path = out_dir / "graph-data.txt"
-    plot_path = out_dir / "graph-plot.pdf"
+    plot_path = out_dir / "graph-plot.png"
 
     save_report(report, report_path)
     typer.echo(f"\nReport saved -> {report_path}")

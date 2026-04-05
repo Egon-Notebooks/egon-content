@@ -201,11 +201,11 @@ class TestSaveGraphData:
 class TestPlotGraph:
     def test_pdf_created(self, tmp_path):
         graph = {"Anger": {"Fear"}, "Fear": set(), "Sadness": set()}
-        out = tmp_path / "graph-plot.pdf"
+        out = tmp_path / "graph-plot.png"
         plot_graph(graph, out)
         assert out.exists() and out.stat().st_size > 0
 
     def test_empty_graph_does_not_crash(self, tmp_path):
-        out = tmp_path / "graph-plot.pdf"
+        out = tmp_path / "graph-plot.png"
         plot_graph({}, out)
         assert out.exists()

@@ -195,7 +195,7 @@ def _draw_background_gradient(ax: plt.Axes, bg_dark: str, bg_mid: str) -> None:
 
 
 def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
-    """Render a beautiful network visualization and save it as a PDF.
+    """Render a beautiful network visualization and save it as a PNG.
 
 
 
@@ -309,5 +309,5 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
 
     plt.tight_layout(pad=0.3)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, bbox_inches="tight", facecolor=fig.get_facecolor(), format="pdf")
+    fig.savefig(output_path, dpi=180, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)

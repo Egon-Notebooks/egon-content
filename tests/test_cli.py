@@ -157,7 +157,7 @@ class TestGraphReportCommand:
         assert "Edges:" in result.output
         assert (tmp_path / "obsidian" / "graph-report.txt").exists()
         assert (tmp_path / "obsidian" / "graph-data.txt").exists()
-        assert (tmp_path / "obsidian" / "graph-plot.pdf").exists()
+        assert (tmp_path / "obsidian" / "graph-plot.png").exists()
 
 
 class TestListPacksCommand:

@@ -95,7 +95,7 @@ Prints a structural overview and saves three files under `generated_content/<app
 | --- | --- |
 | `graph-report.txt` | Numeric metrics summary |
 | `graph-data.txt` | Full adjacency list sorted by degree |
-| `graph-plot.pdf` | Network visualization |
+| `graph-plot.png` | Network visualization |
 
 ### Graph metrics
 
@@ -115,7 +115,7 @@ The graph is a **directed simple graph** (DiGraph) — edges reflect wikilinks w
 Metrics are computed on the undirected projection.
 Edges are unweighted; self-loops are excluded.
 
-![Graph visualization](generated_content/logseq/graph-plot.pdf)
+![Graph visualization](generated_content/logseq/graph-plot.png)
 
 **List all available packs and topics:**
 

@@ -3,7 +3,7 @@ generated_content/**
 !generated_content/**/.gitkeep
 !generated_content/**/graph-report.txt
 !generated_content/**/graph-data.txt
-!generated_content/**/graph-plot.pdf
+!generated_content/**/graph-plot.png
 
 # Environment
 .env
