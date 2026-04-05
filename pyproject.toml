@@ -40,3 +40,6 @@ testpaths = ["tests"]
 [tool.coverage.run]
 source = ["egon"]
 omit = ["tests/*", ".venv/*"]
+
+[tool.ruff.lint]
+ignore = ["F401"]
