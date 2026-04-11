@@ -158,6 +158,23 @@ PACKS: dict[str, list[str]] = {
         "Self-compassion in trauma recovery",
         "When to seek trauma-informed support",
     ],
+    # One node per distortion — designed as a label taxonomy for NLP classification
+    # of journal entries into cognitive distortion categories.
+    "cognitive-distortions": [
+        "All-or-nothing thinking",
+        "Overgeneralization",
+        "Mental filter",
+        "Disqualifying the positive",
+        "Mind reading",
+        "Fortune telling",
+        "Catastrophizing",
+        "Magnification and minimization",
+        "Emotional reasoning",
+        "Should statements",
+        "Labeling and mislabeling",
+        "Personalization",
+        "Jumping to conclusions",
+    ],
     "bullying": [
         "Understanding bullying",
         "Cyberbullying",

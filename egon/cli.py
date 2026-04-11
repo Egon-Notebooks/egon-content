@@ -24,6 +24,8 @@ from egon.image_generator import generate_image
 from egon.linker import apply_wikilinks, get_aliases
 from egon.packs import BASE_PACKS, PACKS
 from egon.prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_response
+from egon.questionnaire_data import ALL_QUESTIONNAIRES
+from egon.questionnaire_formatter import format_questionnaire
 
 load_dotenv()
 
@@ -209,6 +211,30 @@ def graph_report(
 
     plot_graph(graph, plot_path)
     typer.echo(f"Plot saved   -> {plot_path}")
+
+
+@app.command(name="install-questionnaires")
+def install_questionnaires(
+    app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
+) -> None:
+    """Write clinically validated questionnaire templates to the nodes directory.
+
+    These are static templates — no API call is made. Each questionnaire is
+    written verbatim from its validated source; question wording is never altered.
+    """
+    nodes_dir = OUTPUT_ROOT / app_name.value / "nodes"
+    nodes_dir.mkdir(parents=True, exist_ok=True)
+
+    for q in ALL_QUESTIONNAIRES:
+        filename, content = format_questionnaire(q, app_name.value)
+        dest = nodes_dir / filename
+        if dest.exists():
+            typer.echo(f"  [exists]  {filename}")
+        else:
+            dest.write_text(content, encoding="utf-8")
+            typer.echo(f"  [written] {filename}")
+
+    typer.echo(f"\n{len(ALL_QUESTIONNAIRES)} questionnaire templates written to {nodes_dir}")
 
 
 @app.command(name="list-packs")

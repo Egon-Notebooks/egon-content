@@ -41,6 +41,18 @@ TOPIC_ALIASES: dict[str, list[str]] = {
     "The Big Five personality traits": ["Big Five", "OCEAN"],
     "Extraversion and introversion": ["introversion", "extraversion", "introvert", "extrovert"],
     "Neuroticism and emotional stability": ["neuroticism"],
+    # Cognitive distortions
+    "All-or-nothing thinking": ["black-and-white thinking", "splitting"],
+    "Overgeneralization": ["overgeneralizing"],
+    "Mental filter": ["selective abstraction"],
+    "Mind reading": ["mind-reading"],
+    "Fortune telling": ["crystal ball thinking"],
+    "Magnification and minimization": ["magnification", "minimization"],
+    "Emotional reasoning": ["feelings as facts"],
+    "Should statements": ["should thinking", "musts"],
+    "Labeling and mislabeling": ["labeling", "mislabeling"],
+    "Personalization": ["personalizing"],
+    "Jumping to conclusions": ["jumping to conclusions"],
 }
 
 
