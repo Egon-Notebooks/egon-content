@@ -8,8 +8,8 @@ import io
 import os
 from pathlib import Path
 
-from PIL import Image
 from openai import OpenAI
+from PIL import Image
 
 _PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
 _IMAGE_PROMPT_TEMPLATE: str = (_PROMPTS_DIR / "image_style.txt").read_text(encoding="utf-8").strip()

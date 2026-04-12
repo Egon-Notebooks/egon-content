@@ -8,14 +8,13 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
-
 # Matches [[Target]] and [[Target|display]] wikilinks.
-_WIKILINK_RE = re.compile(r'\[\[([^\]|]+)(?:\|[^\]]+)?\]\]')
+_WIKILINK_RE = re.compile(r"\[\[([^\]|]+)(?:\|[^\]]+)?\]\]")
 
 
 @dataclass
@@ -23,11 +22,11 @@ class GraphReport:
     total_nodes: int
     total_edges: int
     orphan_nodes: list[str]
-    most_linked: list[tuple[str, int]]        # (node, undirected degree), descending
+    most_linked: list[tuple[str, int]]  # (node, undirected degree), descending
     avg_degree: float
     density: float
-    clustering: float                         # global average clustering coefficient
-    connected_components: int                 # number of disconnected sub-graphs
+    clustering: float  # global average clustering coefficient
+    connected_components: int  # number of disconnected sub-graphs
     betweenness_top: list[tuple[str, float]]  # (node, betweenness score), top 5
 
 
@@ -38,7 +37,7 @@ def _parse_wikilinks(path: Path) -> set[str]:
     if text.startswith("---"):
         end = text.find("---", 3)
         if end != -1:
-            text = text[end + 3:]
+            text = text[end + 3 :]
     return {m.group(1).strip() for m in _WIKILINK_RE.finditer(text)}
 
 
@@ -188,10 +187,19 @@ def _draw_background_gradient(ax: plt.Axes, bg_dark: str, bg_mid: str) -> None:
 
     dark = np.array(mcolors.to_rgb(bg_dark))
     mid = np.array(mcolors.to_rgb(bg_mid))
-    gradient = dark[np.newaxis, np.newaxis, :] + r[:, :, np.newaxis] * (dark - mid)[np.newaxis, np.newaxis, :]
+    gradient = (
+        dark[np.newaxis, np.newaxis, :]
+        + r[:, :, np.newaxis] * (dark - mid)[np.newaxis, np.newaxis, :]
+    )
     gradient = np.clip(gradient, 0, 1)
 
-    ax.imshow(gradient, extent=ax.get_xlim() + ax.get_ylim(), aspect="auto", zorder=0, origin="upper")
+    ax.imshow(
+        gradient,
+        extent=ax.get_xlim() + ax.get_ylim(),
+        aspect="auto",
+        zorder=0,
+        origin="upper",
+    )
 
 
 def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
@@ -202,8 +210,8 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
     Style: deep-space gradient background, nodes on a purple→teal gradient sized
     by degree, multi-layer glow, soft semi-transparent edges, clean labels.
     """
-    BG_DARK = "#05050f"   # near-black with a hint of blue
-    BG_MID  = "#0f0a2a"   # deep indigo at the centre
+    BG_DARK = "#05050f"  # near-black with a hint of blue
+    BG_MID = "#0f0a2a"  # deep indigo at the centre
     EDGE_COLOR = "#c4b5fd"  # soft lavender edges
 
     G = nx.DiGraph()
@@ -218,7 +226,7 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
 
     # Spring layout — larger k spreads nodes out more for readability.
     n = len(undirected)
-    k_val = 3.2 / (n ** 0.45 + 1e-6)
+    k_val = 3.2 / (n**0.45 + 1e-6)
     pos = nx.spring_layout(undirected, seed=42, k=k_val, iterations=80)
 
     fig, ax = plt.subplots(figsize=(22, 15))
@@ -242,20 +250,22 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
 
     # --- Edges: three layers for a soft glow effect ---
     edge_params = [
-        dict(width=4.0, alpha=0.03),   # outermost halo
-        dict(width=1.8, alpha=0.08),   # mid glow
-        dict(width=0.7, alpha=0.22),   # crisp core
+        dict(width=4.0, alpha=0.03),  # outermost halo
+        dict(width=1.8, alpha=0.08),  # mid glow
+        dict(width=0.7, alpha=0.22),  # crisp core
     ]
     for params in edge_params:
         nx.draw_networkx_edges(
-            undirected, pos, ax=ax,
+            undirected,
+            pos,
+            ax=ax,
             edge_color=EDGE_COLOR,
             arrows=False,
             **params,
         )
 
     # --- Node colors: #7c3aed (violet) → #06b6d4 (cyan) by degree ---
-    color_low  = np.array(mcolors.to_rgb("#7c3aed"))
+    color_low = np.array(mcolors.to_rgb("#7c3aed"))
     color_high = np.array(mcolors.to_rgb("#06b6d4"))
     node_list = list(undirected.nodes())
     norms = [degrees[n] / max_deg for n in node_list]
@@ -267,7 +277,10 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
     # Three glow layers per node.
     for scale, alpha in [(9, 0.04), (4, 0.10), (1.8, 0.18), (1, 0.92)]:
         nx.draw_networkx_nodes(
-            undirected, pos, nodelist=node_list, ax=ax,
+            undirected,
+            pos,
+            nodelist=node_list,
+            ax=ax,
             node_color=node_colors,
             node_size=[s * scale for s in node_sizes],
             alpha=alpha,
@@ -276,7 +289,10 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
 
     # Thin bright ring on each node for definition.
     nx.draw_networkx_nodes(
-        undirected, pos, nodelist=node_list, ax=ax,
+        undirected,
+        pos,
+        nodelist=node_list,
+        ax=ax,
         node_color="none",
         node_size=node_sizes,
         linewidths=0.6,
@@ -289,8 +305,11 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
     font_sizes = {n: 5.5 + 3.5 * (degrees[n] / max_deg) for n in node_list}
     for node, (lx, ly) in label_pos.items():
         ax.text(
-            lx, ly, node,
-            ha="center", va="bottom",
+            lx,
+            ly,
+            node,
+            ha="center",
+            va="bottom",
             fontsize=font_sizes[node],
             color="#e2e8f0",
             fontfamily="sans-serif",

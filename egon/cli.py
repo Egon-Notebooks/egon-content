@@ -10,8 +10,8 @@ Usage examples:
 """
 
 import os
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
 
 import anthropic
 import typer
@@ -19,7 +19,14 @@ from dotenv import load_dotenv
 from openai import OpenAIError
 
 from egon.generators import logseq, obsidian
-from egon.graph import build_graph, compute_report, format_report, plot_graph, save_graph_data, save_report
+from egon.graph import (
+    build_graph,
+    compute_report,
+    format_report,
+    plot_graph,
+    save_graph_data,
+    save_report,
+)
 from egon.image_generator import generate_image
 from egon.linker import apply_wikilinks, get_aliases
 from egon.packs import BASE_PACKS, PACKS
@@ -39,8 +46,8 @@ MAX_TOKENS = 1024
 # Image output subdirectory per app — these must match the relative paths
 # embedded in the Markdown by each formatter.
 IMAGE_SUBDIR = {
-    "obsidian": "images",   # referenced as images/<slug>.webp in the note
-    "logseq": "assets",     # referenced as ../assets/<slug>.webp from pages/
+    "obsidian": "images",  # referenced as images/<slug>.webp in the note
+    "logseq": "assets",  # referenced as ../assets/<slug>.webp from pages/
 }
 
 
@@ -72,7 +79,10 @@ def _generate_body(client: anthropic.Anthropic, topic: str) -> tuple[str, list[s
         typer.echo("Error: Invalid API key. Check ANTHROPIC_API_KEY in your .env file.", err=True)
         raise typer.Exit(code=1)
     except anthropic.APIConnectionError:
-        typer.echo("Error: Could not reach the Anthropic API. Check your internet connection.", err=True)
+        typer.echo(
+            "Error: Could not reach the Anthropic API. Check your internet connection.",
+            err=True,
+        )
         raise typer.Exit(code=1)
     except anthropic.APIError as e:
         typer.echo(f"Error: API request failed — {e}", err=True)
@@ -135,7 +145,9 @@ def generate(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     topic: str = typer.Option(..., "--topic", help="The mental health topic to write about"),
     with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration"),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Preview what would be generated without making API calls"),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Preview what would be generated without making API calls"
+    ),
 ) -> None:
     """Generate a single article for a given topic."""
     client = _get_client()
@@ -146,8 +158,12 @@ def generate(
 def pack(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
     pack_name: str = typer.Option(..., "--pack", help="Name of the topic pack to generate"),
-    with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration per article"),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Preview what would be generated without making API calls"),
+    with_image: bool = typer.Option(
+        True, "--image/--no-image", help="Generate an illustration per article"
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Preview what would be generated without making API calls"
+    ),
 ) -> None:
     """Generate all articles in a named topic pack."""
     if pack_name not in PACKS:
@@ -166,15 +182,24 @@ def pack(
 @app.command(name="generate-all")
 def generate_all(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
-    with_image: bool = typer.Option(True, "--image/--no-image", help="Generate an illustration per article"),
-    all_packs: bool = typer.Option(False, "--all-packs", help="Include supplementary packs, not just the base graph"),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Preview what would be generated without making API calls"),
+    with_image: bool = typer.Option(
+        True, "--image/--no-image", help="Generate an illustration per article"
+    ),
+    all_packs: bool = typer.Option(
+        False, "--all-packs", help="Include supplementary packs, not just the base graph"
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Preview what would be generated without making API calls"
+    ),
 ) -> None:
     """Generate the base graph — or all packs with --all-packs."""
     packs_to_run = PACKS if all_packs else {k: v for k, v in PACKS.items() if k in BASE_PACKS}
     label = "all packs" if all_packs else "base graph"
     total_topics = sum(len(topics) for topics in packs_to_run.values())
-    typer.echo(f"Generating {label} ({len(packs_to_run)} packs, {total_topics} topics) for {app_name.value} ...\n")
+    typer.echo(
+        f"Generating {label} ({len(packs_to_run)} packs, {total_topics} topics)"
+        f" for {app_name.value} ...\n"
+    )
     client = _get_client()
     for pack_name, topics in packs_to_run.items():
         typer.echo(f"--- Pack: {pack_name} ---")

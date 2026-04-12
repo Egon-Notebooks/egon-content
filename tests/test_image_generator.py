@@ -2,8 +2,9 @@
 
 import base64
 import io
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 from PIL import Image as PILImage
 
 from egon.image_generator import build_image_prompt, generate_image

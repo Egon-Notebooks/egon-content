@@ -23,25 +23,25 @@ class Question:
 
 @dataclass
 class ScoringBand:
-    range_str: str   # e.g. "0–4"
-    label: str       # e.g. "Minimal depression"
+    range_str: str  # e.g. "0–4"
+    label: str  # e.g. "Minimal depression"
 
 
 @dataclass
 class Questionnaire:
     key: str
-    title: str                        # Node filename / display title
-    abbreviation: str                 # "PHQ-9"
-    full_name: str                    # "Patient Health Questionnaire-9"
-    measures: str                     # "depression"
-    frequency_note: str               # "Recommended frequency: monthly"
-    timeframe: str                    # "Over the last 2 weeks..."
-    instructions: str                 # Additional instructions shown above the table
-    scale_labels: list[tuple[int, str]]   # [(0, "Not at all"), ...]
+    title: str  # Node filename / display title
+    abbreviation: str  # "PHQ-9"
+    full_name: str  # "Patient Health Questionnaire-9"
+    measures: str  # "depression"
+    frequency_note: str  # "Recommended frequency: monthly"
+    timeframe: str  # "Over the last 2 weeks..."
+    instructions: str  # Additional instructions shown above the table
+    scale_labels: list[tuple[int, str]]  # [(0, "Not at all"), ...]
     questions: list[Question]
-    scoring_formula: str              # Plain-text description of how to score
+    scoring_formula: str  # Plain-text description of how to score
     interpretation: list[ScoringBand]
-    safe_messaging_note: str | None   # Shown at the bottom if present
+    safe_messaging_note: str | None  # Shown at the bottom if present
     licence: str
     citation: str
     tags: list[str] = field(default_factory=list)
@@ -58,8 +58,12 @@ PHQ9 = Questionnaire(
     full_name="Patient Health Questionnaire-9",
     measures="depression",
     frequency_note="Recommended frequency: monthly, or whenever your mood has been noticeably low.",
-    timeframe="Over the last 2 weeks, how often have you been bothered by any of the following problems?",
-    instructions="For each item, choose the option that best describes how often you have experienced it.",
+    timeframe=(
+        "Over the last 2 weeks, how often have you been bothered by any of the following problems?"
+    ),
+    instructions=(
+        "For each item, choose the option that best describes how often you have experienced it."
+    ),
     scale_labels=[
         (0, "Not at all"),
         (1, "Several days"),
@@ -72,9 +76,18 @@ PHQ9 = Questionnaire(
         Question("Trouble falling or staying asleep, or sleeping too much"),
         Question("Feeling tired or having little energy"),
         Question("Poor appetite or overeating"),
-        Question("Feeling bad about yourself — or that you are a failure or have let yourself or your family down"),
-        Question("Trouble concentrating on things, such as reading the newspaper or watching television"),
-        Question("Moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual"),
+        Question(
+            "Feeling bad about yourself — or that you are a failure or have let yourself"
+            " or your family down"
+        ),
+        Question(
+            "Trouble concentrating on things, such as reading the newspaper or watching television"
+        ),
+        Question(
+            "Moving or speaking so slowly that other people could have noticed?"
+            " Or the opposite — being so fidgety or restless that you have been moving"
+            " around a lot more than usual"
+        ),
         Question("Thoughts that you would be better off dead, or of hurting yourself in some way"),
     ],
     scoring_formula="Add the scores for all 9 items. Total range: 0–27.",
@@ -104,9 +117,13 @@ GAD7 = Questionnaire(
     abbreviation="GAD-7",
     full_name="Generalized Anxiety Disorder-7",
     measures="generalized anxiety",
-    frequency_note="Recommended frequency: monthly, or whenever anxiety has been noticeably elevated.",
+    frequency_note=(
+        "Recommended frequency: monthly, or whenever anxiety has been noticeably elevated."
+    ),
     timeframe="Over the last 2 weeks, how often have you been bothered by the following problems?",
-    instructions="For each item, choose the option that best describes how often you have experienced it.",
+    instructions=(
+        "For each item, choose the option that best describes how often you have experienced it."
+    ),
     scale_labels=[
         (0, "Not at all"),
         (1, "Several days"),
@@ -198,7 +215,9 @@ PSS10 = Questionnaire(
     full_name="Perceived Stress Scale (10-item)",
     measures="perceived stress",
     frequency_note="Recommended frequency: monthly.",
-    timeframe="The questions in this scale ask about your feelings and thoughts during the last month.",
+    timeframe=(
+        "The questions in this scale ask about your feelings and thoughts during the last month."
+    ),
     instructions=(
         "For each question, indicate how often you felt or thought a certain way. "
         "Items marked (R) are reverse-scored — see the scoring note below."
@@ -211,16 +230,44 @@ PSS10 = Questionnaire(
         (4, "Very often"),
     ],
     questions=[
-        Question("In the last month, how often have you been upset because of something that happened unexpectedly?"),
-        Question("In the last month, how often have you felt that you were unable to control the important things in your life?"),
+        Question(
+            "In the last month, how often have you been upset because of something"
+            " that happened unexpectedly?"
+        ),
+        Question(
+            "In the last month, how often have you felt that you were unable to control"
+            " the important things in your life?"
+        ),
         Question("In the last month, how often have you felt nervous and stressed?"),
-        Question("In the last month, how often have you felt confident about your ability to handle your personal problems?", reversed=True),
-        Question("In the last month, how often have you felt that things were going your way?", reversed=True),
-        Question("In the last month, how often have you found that you could not cope with all the things that you had to do?"),
-        Question("In the last month, how often have you been able to control irritations in your life?", reversed=True),
-        Question("In the last month, how often have you felt that you were on top of things?", reversed=True),
-        Question("In the last month, how often have you been angered because of things that were outside of your control?"),
-        Question("In the last month, how often have you felt difficulties were piling up so high that you could not overcome them?"),
+        Question(
+            "In the last month, how often have you felt confident about your ability"
+            " to handle your personal problems?",
+            reversed=True,
+        ),
+        Question(
+            "In the last month, how often have you felt that things were going your way?",
+            reversed=True,
+        ),
+        Question(
+            "In the last month, how often have you found that you could not cope with"
+            " all the things that you had to do?"
+        ),
+        Question(
+            "In the last month, how often have you been able to control irritations in your life?",
+            reversed=True,
+        ),
+        Question(
+            "In the last month, how often have you felt that you were on top of things?",
+            reversed=True,
+        ),
+        Question(
+            "In the last month, how often have you been angered because of things"
+            " that were outside of your control?"
+        ),
+        Question(
+            "In the last month, how often have you felt difficulties were piling up so high"
+            " that you could not overcome them?"
+        ),
     ],
     scoring_formula=(
         "Items 4, 5, 7, and 8 are reverse-scored: replace 0→4, 1→3, 2→2, 3→1, 4→0. "
@@ -251,10 +298,11 @@ RSES = Questionnaire(
     full_name="Rosenberg Self-Esteem Scale",
     measures="global self-esteem",
     frequency_note="Recommended frequency: monthly or quarterly.",
-    timeframe="Please read each statement and indicate how strongly you agree or disagree with it right now.",
-    instructions=(
-        "Items marked (R) are reverse-scored — see the scoring note below."
+    timeframe=(
+        "Please read each statement and indicate how strongly you agree or disagree"
+        " with it right now."
     ),
+    instructions=("Items marked (R) are reverse-scored — see the scoring note below."),
     scale_labels=[
         (3, "Strongly agree"),
         (2, "Agree"),
@@ -285,8 +333,7 @@ RSES = Questionnaire(
     safe_messaging_note=None,
     licence="Public domain.",
     citation=(
-        "Rosenberg M. Society and the Adolescent Self-Image. "
-        "Princeton University Press, 1965."
+        "Rosenberg M. Society and the Adolescent Self-Image. Princeton University Press, 1965."
     ),
     tags=["questionnaire", "self-esteem", "self-assessment"],
 )
@@ -298,10 +345,10 @@ BRS = Questionnaire(
     full_name="Brief Resilience Scale",
     measures="resilience — the ability to bounce back from stress",
     frequency_note="Recommended frequency: monthly or quarterly.",
-    timeframe="Please indicate the extent to which you agree with each of the following statements.",
-    instructions=(
-        "Items marked (R) are reverse-scored — see the scoring note below."
+    timeframe=(
+        "Please indicate the extent to which you agree with each of the following statements."
     ),
+    instructions=("Items marked (R) are reverse-scored — see the scoring note below."),
     scale_labels=[
         (1, "Strongly disagree"),
         (2, "Disagree"),

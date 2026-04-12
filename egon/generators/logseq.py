@@ -9,19 +9,20 @@ from datetime import date
 from egon.generators import _to_filename
 
 
-def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None, aliases: list[str] | None = None) -> tuple[str, str]:
+def format(
+    topic: str,
+    body: str,
+    disclaimer: str,
+    tags: list[str] | None = None,
+    aliases: list[str] | None = None,
+) -> tuple[str, str]:
     """Return (filename, markdown_content) for a Logseq page."""
     today = date.today().isoformat()
     filename = f"{_to_filename(topic)}.md"
 
     tags_value = ", ".join(tags) if tags else ""
     alias_line = f"alias:: {', '.join(aliases)}\n" if aliases else ""
-    properties = (
-        f"author:: Claude\n"
-        f"date:: {today}\n"
-        f"tags:: {tags_value}\n"
-        f"{alias_line}"
-    )
+    properties = f"author:: Claude\ndate:: {today}\ntags:: {tags_value}\n{alias_line}"
 
     bullet_paragraphs = "\n".join(
         f"- {para.strip()}" for para in body.strip().split("\n\n") if para.strip()

@@ -1,7 +1,16 @@
 """Unit tests for graph analysis."""
 
 from pathlib import Path
-from egon.graph import build_graph, compute_report, format_report, save_report, save_graph_data, plot_graph, GraphReport
+
+from egon.graph import (
+    GraphReport,
+    build_graph,
+    compute_report,
+    format_report,
+    plot_graph,
+    save_graph_data,
+    save_report,
+)
 
 
 def _write_node(tmp_path: Path, name: str, body: str) -> Path:
@@ -114,9 +123,14 @@ class TestComputeReport:
 class TestFormatReport:
     def _make_report(self, **kwargs):
         defaults = dict(
-            total_nodes=5, total_edges=3, orphan_nodes=["Anger"],
-            most_linked=[("Fear", 4), ("Sadness", 2)], avg_degree=1.2,
-            density=0.15, clustering=0.4, connected_components=1,
+            total_nodes=5,
+            total_edges=3,
+            orphan_nodes=["Anger"],
+            most_linked=[("Fear", 4), ("Sadness", 2)],
+            avg_degree=1.2,
+            density=0.15,
+            clustering=0.4,
+            connected_components=1,
             betweenness_top=[("Fear", 0.5), ("Sadness", 0.2)],
         )
         return GraphReport(**{**defaults, **kwargs})
@@ -141,8 +155,14 @@ class TestFormatReport:
 
 def _simple_report(**kwargs) -> GraphReport:
     defaults = dict(
-        total_nodes=2, total_edges=1, orphan_nodes=[], most_linked=[("Fear", 1)],
-        avg_degree=0.5, density=0.5, clustering=0.0, connected_components=1,
+        total_nodes=2,
+        total_edges=1,
+        orphan_nodes=[],
+        most_linked=[("Fear", 1)],
+        avg_degree=0.5,
+        density=0.5,
+        clustering=0.0,
+        connected_components=1,
         betweenness_top=[],
     )
     return GraphReport(**{**defaults, **kwargs})

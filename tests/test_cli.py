@@ -9,7 +9,6 @@ from typer.testing import CliRunner
 
 from egon.cli import app
 
-
 runner = CliRunner()
 
 
@@ -39,9 +38,17 @@ class TestGenerateCommand:
     def test_generate_dry_run(self, tmp_path, monkeypatch):
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
         with patch("egon.cli.OUTPUT_ROOT", tmp_path):
-            result = runner.invoke(app, [
-                "generate", "--app", "obsidian", "--topic", "Anger", "--dry-run",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "generate",
+                    "--app",
+                    "obsidian",
+                    "--topic",
+                    "Anger",
+                    "--dry-run",
+                ],
+            )
         assert result.exit_code == 0
         assert "[dry-run]" in result.output
         # No files should be written
@@ -55,17 +62,32 @@ class TestGenerateCommand:
             patch("egon.cli._get_client", return_value=mock_client),
             patch("egon.cli.generate_image"),
         ):
-            result = runner.invoke(app, [
-                "generate", "--app", "obsidian", "--topic", "Anger", "--no-image",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "generate",
+                    "--app",
+                    "obsidian",
+                    "--topic",
+                    "Anger",
+                    "--no-image",
+                ],
+            )
         assert result.exit_code == 0
         assert (tmp_path / "obsidian" / "nodes" / "Anger.md").exists()
 
     def test_generate_missing_api_key(self, monkeypatch):
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-        result = runner.invoke(app, [
-            "generate", "--app", "obsidian", "--topic", "Anger",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "generate",
+                "--app",
+                "obsidian",
+                "--topic",
+                "Anger",
+            ],
+        )
         assert result.exit_code == 1
 
     def test_generate_with_image(self, tmp_path, monkeypatch):
@@ -78,9 +100,16 @@ class TestGenerateCommand:
             patch("egon.cli._get_client", return_value=mock_client),
             patch("egon.image_generator.OpenAI", return_value=mock_openai),
         ):
-            result = runner.invoke(app, [
-                "generate", "--app", "obsidian", "--topic", "Anger",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "generate",
+                    "--app",
+                    "obsidian",
+                    "--topic",
+                    "Anger",
+                ],
+            )
         assert result.exit_code == 0
         assert (tmp_path / "obsidian" / "nodes" / "Anger.md").exists()
         assert any((tmp_path / "obsidian" / "images").glob("*.webp"))
@@ -94,18 +123,33 @@ class TestPackCommand:
             patch("egon.cli.OUTPUT_ROOT", tmp_path),
             patch("egon.cli._get_client", return_value=mock_client),
         ):
-            result = runner.invoke(app, [
-                "pack", "--app", "obsidian", "--pack", "understanding-emotions", "--dry-run",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "pack",
+                    "--app",
+                    "obsidian",
+                    "--pack",
+                    "understanding-emotions",
+                    "--dry-run",
+                ],
+            )
         assert result.exit_code == 0
         assert "[dry-run]" in result.output
         assert not any(tmp_path.rglob("*.md"))
 
     def test_pack_unknown_pack_exits(self, monkeypatch):
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
-        result = runner.invoke(app, [
-            "pack", "--app", "obsidian", "--pack", "nonexistent-pack",
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "pack",
+                "--app",
+                "obsidian",
+                "--pack",
+                "nonexistent-pack",
+            ],
+        )
         assert result.exit_code == 1
 
 
@@ -117,9 +161,15 @@ class TestGenerateAllCommand:
             patch("egon.cli.OUTPUT_ROOT", tmp_path),
             patch("egon.cli._get_client", return_value=mock_client),
         ):
-            result = runner.invoke(app, [
-                "generate-all", "--app", "obsidian", "--dry-run",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "generate-all",
+                    "--app",
+                    "obsidian",
+                    "--dry-run",
+                ],
+            )
         assert result.exit_code == 0
         assert "[dry-run]" in result.output
         assert "base graph" in result.output
@@ -132,9 +182,16 @@ class TestGenerateAllCommand:
             patch("egon.cli.OUTPUT_ROOT", tmp_path),
             patch("egon.cli._get_client", return_value=mock_client),
         ):
-            result = runner.invoke(app, [
-                "generate-all", "--app", "obsidian", "--all-packs", "--dry-run",
-            ])
+            result = runner.invoke(
+                app,
+                [
+                    "generate-all",
+                    "--app",
+                    "obsidian",
+                    "--all-packs",
+                    "--dry-run",
+                ],
+            )
         assert result.exit_code == 0
         assert "all packs" in result.output
 

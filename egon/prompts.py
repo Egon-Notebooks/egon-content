@@ -40,7 +40,7 @@ def parse_response(raw: str) -> tuple[str, list[str]]:
     """
     lines = raw.strip().splitlines()
     if lines and lines[-1].upper().startswith("TAGS:"):
-        tag_line = lines[-1][len("TAGS:"):].strip()
+        tag_line = lines[-1][len("TAGS:") :].strip()
         tags = [t.strip() for t in tag_line.split(",") if t.strip()]
         body = "\n".join(lines[:-1]).strip()
         return body, tags

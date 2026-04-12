@@ -8,7 +8,13 @@ from datetime import date
 from egon.generators import _to_filename
 
 
-def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None, aliases: list[str] | None = None) -> tuple[str, str]:
+def format(
+    topic: str,
+    body: str,
+    disclaimer: str,
+    tags: list[str] | None = None,
+    aliases: list[str] | None = None,
+) -> tuple[str, str]:
     """Return (filename, markdown_content) for an Obsidian note."""
     today = date.today().isoformat()
     filename = f"{_to_filename(topic)}.md"
@@ -24,7 +30,7 @@ def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None
         aliases_yaml = ""
     frontmatter = (
         "---\n"
-        f"title: \"{safe_title}\"\n"
+        f'title: "{safe_title}"\n'
         f"author: Claude\n"
         f"date: {today}\n"
         f"{tags_yaml}"
@@ -33,11 +39,5 @@ def format(topic: str, body: str, disclaimer: str, tags: list[str] | None = None
         "---\n"
     )
 
-    content = (
-        f"{frontmatter}\n"
-        f"# {topic}\n\n"
-        f"{body.strip()}\n\n"
-        f"---\n\n"
-        f"{disclaimer}\n"
-    )
+    content = f"{frontmatter}\n# {topic}\n\n{body.strip()}\n\n---\n\n{disclaimer}\n"
     return filename, content

@@ -4,15 +4,17 @@ from egon.generators import logseq, obsidian
 from egon.linker import apply_wikilinks, get_aliases
 from egon.prompts import build_user_prompt, parse_response
 
-
 SAMPLE_TOPIC = "Managing social anxiety"
-SAMPLE_BODY = "Paragraph one about anxiety.\n\nParagraph two with strategies.\n\nParagraph three with hope."
+SAMPLE_BODY = (
+    "Paragraph one about anxiety.\n\nParagraph two with strategies.\n\nParagraph three with hope."
+)
 SAMPLE_DISCLAIMER = "_This is a disclaimer._"
 
 
 # ---------------------------------------------------------------------------
 # Filename generation (tested via each formatter)
 # ---------------------------------------------------------------------------
+
 
 class TestFilename:
     def test_preserves_case(self):
@@ -51,6 +53,7 @@ class TestFilename:
 # Logseq formatter
 # ---------------------------------------------------------------------------
 
+
 class TestLogseqFormatter:
     def setup_method(self):
         self.filename, self.content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER)
@@ -68,7 +71,9 @@ class TestLogseqFormatter:
         assert "tags::" in self.content
 
     def test_tags_with_values(self):
-        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, ["anxiety", "stress"])
+        _, content = logseq.format(
+            SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, ["anxiety", "stress"]
+        )
         assert "tags:: anxiety, stress" in content
 
     def test_tags_empty(self):
@@ -76,7 +81,9 @@ class TestLogseqFormatter:
         assert "tags:: \n" in content
 
     def test_aliases_rendered(self):
-        _, content = logseq.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, [], ["anxious", "worried"])
+        _, content = logseq.format(
+            SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, [], ["anxious", "worried"]
+        )
         assert "alias:: anxious, worried" in content
 
     def test_no_alias_line_when_empty(self):
@@ -99,7 +106,8 @@ class TestLogseqFormatter:
     def test_empty_body_produces_no_bullets(self):
         _, content = logseq.format(SAMPLE_TOPIC, "", SAMPLE_DISCLAIMER)
         non_disclaimer_bullets = [
-            line for line in content.splitlines()
+            line
+            for line in content.splitlines()
             if line.startswith("- ") and SAMPLE_DISCLAIMER not in line
         ]
         assert non_disclaimer_bullets == []
@@ -112,6 +120,7 @@ class TestLogseqFormatter:
 # ---------------------------------------------------------------------------
 # Obsidian formatter
 # ---------------------------------------------------------------------------
+
 
 class TestObsidianFormatter:
     def setup_method(self):
@@ -137,7 +146,9 @@ class TestObsidianFormatter:
         assert "tags:" in self.content
 
     def test_frontmatter_tags_with_values(self):
-        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, ["emotions", "anxiety"])
+        _, content = obsidian.format(
+            SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, ["emotions", "anxiety"]
+        )
         assert "  - emotions" in content
         assert "  - anxiety" in content
 
@@ -146,7 +157,9 @@ class TestObsidianFormatter:
         assert "tags: []" in content
 
     def test_aliases_rendered(self):
-        _, content = obsidian.format(SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, [], ["anxious", "worried"])
+        _, content = obsidian.format(
+            SAMPLE_TOPIC, SAMPLE_BODY, SAMPLE_DISCLAIMER, [], ["anxious", "worried"]
+        )
         assert "aliases:" in content
         assert "  - anxious" in content
         assert "  - worried" in content
@@ -173,7 +186,7 @@ class TestObsidianFormatter:
         topic_with_quotes = 'He said "hello"'
         _, content = obsidian.format(topic_with_quotes, "", "")
         frontmatter_line = next(line for line in content.splitlines() if line.startswith("title:"))
-        inner = frontmatter_line[len('title: "'):-1]
+        inner = frontmatter_line[len('title: "') : -1]
         assert '\\"' in inner
 
     def test_yaml_title_escapes_backslash(self):
@@ -185,6 +198,7 @@ class TestObsidianFormatter:
 # ---------------------------------------------------------------------------
 # Prompts
 # ---------------------------------------------------------------------------
+
 
 class TestBuildUserPrompt:
     def test_topic_included(self):
@@ -220,6 +234,7 @@ class TestParseResponse:
 # ---------------------------------------------------------------------------
 # Wikilinks
 # ---------------------------------------------------------------------------
+
 
 class TestApplyWikilinks:
     ALL_TOPICS = ["Anger", "Social anxiety", "Understanding anxiety", "Self-compassion", "Fear"]

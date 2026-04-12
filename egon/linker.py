@@ -8,7 +8,6 @@ It is used both to:
 
 import re
 
-
 # Maps canonical topic title → list of aliases.
 # Keep entries conservative: only add aliases that are a natural, unambiguous
 # way to refer to that specific node. Omit entries with no clear aliases.
@@ -98,16 +97,16 @@ def apply_wikilinks(body: str, all_topics: list[str], current_topic: str) -> str
     for phrase, canonical in candidates:
         if canonical in linked:
             continue
-        pattern = re.compile(r'\b' + re.escape(phrase) + r'\b', re.IGNORECASE)
+        pattern = re.compile(r"\b" + re.escape(phrase) + r"\b", re.IGNORECASE)
         for m in pattern.finditer(body):
             start, end = m.start(), m.end()
             if any(s <= start < e or s < end <= e for s, e, _ in spans):
                 continue
             matched = m.group(0)
             if matched == canonical:
-                replacement = f'[[{matched}]]'
+                replacement = f"[[{matched}]]"
             else:
-                replacement = f'[[{canonical}|{matched}]]'
+                replacement = f"[[{canonical}|{matched}]]"
             spans.append((start, end, replacement))
             linked.add(canonical)
             break  # first mention only
@@ -123,4 +122,4 @@ def apply_wikilinks(body: str, all_topics: list[str], current_topic: str) -> str
         parts.append(replacement)
         pos = end
     parts.append(body[pos:])
-    return ''.join(parts)
+    return "".join(parts)

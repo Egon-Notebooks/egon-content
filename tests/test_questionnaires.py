@@ -1,7 +1,8 @@
 """Tests for questionnaire data and formatters."""
 
 import pytest
-from egon.questionnaire_data import ALL_QUESTIONNAIRES, PHQ9, GAD7, WHO5, PSS10, RSES, BRS
+
+from egon.questionnaire_data import ALL_QUESTIONNAIRES, BRS, GAD7, PHQ9, PSS10, RSES, WHO5
 from egon.questionnaire_formatter import format_questionnaire
 
 
