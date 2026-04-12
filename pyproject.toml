@@ -41,5 +41,10 @@ testpaths = ["tests"]
 source = ["egon"]
 omit = ["tests/*", ".venv/*"]
 
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
 [tool.ruff.lint]
+select = ["E", "F", "W", "I"]
 ignore = ["F401"]

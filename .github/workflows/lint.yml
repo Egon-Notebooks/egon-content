@@ -27,3 +27,6 @@ jobs:
 
       - name: Lint with ruff
         run: uv run ruff check egon/ tests/
+
+      - name: Format check with ruff
+        run: uv run ruff format --check egon/ tests/
