@@ -125,7 +125,6 @@ Edges are unweighted; self-loops are excluded.
 
 ```bash
 uv run egon install-questionnaires --app obsidian
-uv run egon install-questionnaires --app logseq
 ```
 
 Writes one Markdown template per questionnaire to `generated_content/<app>/nodes/`.

@@ -4,12 +4,6 @@ generated_content/**
 !generated_content/**/graph-report.txt
 !generated_content/**/graph-data.txt
 !generated_content/**/graph-plot.png
-!generated_content/**/PHQ-9 Monthly Depression Check-in.md
-!generated_content/**/GAD-7 Monthly Anxiety Check-in.md
-!generated_content/**/WHO-5 Wellbeing Check-in.md
-!generated_content/**/PSS-10 Monthly Stress Check-in.md
-!generated_content/**/Rosenberg Self-Esteem Scale Check-in.md
-!generated_content/**/Brief Resilience Scale Check-in.md
 
 # Environment
 .env
