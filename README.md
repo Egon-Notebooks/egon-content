@@ -144,6 +144,22 @@ The following instruments are included (all open-license):
 
 Each template is formatted for use as a monthly journal entry — questions are listed with response options and a score field, followed by a scoring guide and interpretation table.
 
+**Generate a standalone pencil-sketch illustration:**
+
+```bash
+uv run egon illustrate --description "a lighthouse in a storm"
+```
+
+Images are saved to `generated_content/illustrations/` with an auto-generated filename based on the description and a timestamp.
+Use `--output` to specify a custom path, `--size` to choose the aspect ratio, and `--quality high` for a higher-detail render:
+
+```bash
+uv run egon illustrate --description "brain with interconnected nodes" --size square --quality high
+uv run egon illustrate --description "calm ocean at dawn" --output exports/ocean.webp
+```
+
+Available sizes: `landscape` (1792×1024, default), `square` (1024×1024), `portrait` (1024×1792).
+
 **List all available packs and topics:**
 
 ```bash
