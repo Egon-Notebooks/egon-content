@@ -221,12 +221,12 @@ Aliases appear in the node's metadata and are also matched when injecting wikili
 ```text
 egon/
 ├── cli.py                      # CLI entry point (generate, pack, generate-all, graph-report,
-│                               #   install-questionnaires, list-packs)
+│                               #   install-questionnaires, illustrate, list-packs)
 ├── packs.py                    # Topic pack definitions (BASE_PACKS controls the base graph)
 ├── prompts.py                  # Prompt loading and response parsing
 ├── linker.py                   # Inline wikilink injection and alias definitions
 ├── graph.py                    # Node graph analysis, metrics, and visualization
-├── image_generator.py          # DALL-E 3 image generation
+├── image_generator.py          # DALL-E 3 image generation (articles + illustrations)
 ├── questionnaire_data.py       # Structured definitions for all validated questionnaires
 ├── questionnaire_formatter.py  # Renders questionnaire data to Obsidian / Logseq Markdown
 └── generators/
@@ -236,7 +236,8 @@ egon/
 
 prompts/
 ├── article_system.txt          # Claude system prompt (edit to change writing style)
-└── image_style.txt             # DALL-E image style instructions (edit to change illustration style)
+├── image_style.txt             # DALL-E style for article illustrations
+└── pencil_style.txt            # DALL-E style for ad-hoc pencil-sketch illustrations
 
 tests/
 ├── test_cli.py
