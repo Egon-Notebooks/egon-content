@@ -181,7 +181,8 @@ Each node is a Markdown file containing:
 ### Customizing prompts
 
 - Edit `prompts/article_system.txt` to change the writing style or safe messaging instructions
-- Edit `prompts/image_style.txt` to change the illustration style
+- Edit `prompts/image_style.txt` to change the article illustration style
+- Edit `prompts/pencil_style.txt` to change the ad-hoc pencil illustration style
 
 ### Adding packs or topics
 
