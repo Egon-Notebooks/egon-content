@@ -7,9 +7,14 @@ Usage examples:
     uv run egon pack --app obsidian --pack anxiety-and-worry
     uv run egon generate-all --app obsidian
     uv run egon list-packs
+    uv run egon illustrate --description "a lighthouse in a storm"
+    uv run egon illustrate --description "brain with interconnected nodes" --size square --quality hd
+    uv run egon illustrate --description "calm ocean at dawn" --output my_image.webp
 """
 
 import os
+import re
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 
@@ -27,7 +32,7 @@ from egon.graph import (
     save_graph_data,
     save_report,
 )
-from egon.image_generator import generate_image
+from egon.image_generator import generate_illustration, generate_image
 from egon.linker import apply_wikilinks, get_aliases
 from egon.packs import BASE_PACKS, PACKS
 from egon.prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_response
@@ -260,6 +265,57 @@ def install_questionnaires(
             typer.echo(f"  [written] {filename}")
 
     typer.echo(f"\n{len(ALL_QUESTIONNAIRES)} questionnaire templates written to {nodes_dir}")
+
+
+@app.command()
+def illustrate(
+    description: str = typer.Option(
+        ..., "--description", "-d", help="Short description of the image to generate"
+    ),
+    size: str = typer.Option(
+        "landscape",
+        "--size",
+        help="Image dimensions: 'landscape' (1792x1024), 'square' (1024x1024), or 'portrait' (1024x1792)",
+    ),
+    quality: str = typer.Option(
+        "medium", "--quality", help="Image quality: 'low', 'medium', 'high', or 'auto'"
+    ),
+    output: Path = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Output file path (default: generated_content/illustrations/<slug>_<timestamp>.webp)",
+    ),
+) -> None:
+    """Generate a pencil-sketch illustration from a short description.
+
+    The style is fixed as a hand-drawn pencil sketch. Edit prompts/pencil_style.txt
+    to tweak the style without touching code.
+    """
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        typer.echo("Error: OPENAI_API_KEY is not set. Add it to your .env file.", err=True)
+        raise typer.Exit(code=1)
+
+    if output is None:
+        slug = re.sub(r"[^a-z0-9]+", "-", description.lower()).strip("-")[:50]
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output = OUTPUT_ROOT / "illustrations" / f"{slug}_{timestamp}.webp"
+
+    typer.echo(f"Generating pencil illustration: {description!r} ...")
+    try:
+        generate_illustration(description, output, size=size, quality=quality)
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(code=1)
+    except EnvironmentError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(code=1)
+    except OpenAIError as e:
+        typer.echo(f"Error: Image generation failed — {e}", err=True)
+        raise typer.Exit(code=1)
+
+    typer.echo(f"Illustration saved -> {output}")
 
 
 @app.command(name="list-packs")
