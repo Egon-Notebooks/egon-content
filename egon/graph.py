@@ -162,14 +162,14 @@ def save_graph_data(graph: dict[str, set[str]], output_path: Path) -> None:
             undirected.setdefault(t, set()).add(node)
 
     # Undirected degree = union of both directions.
-    degrees = {n: len(neighbours) for n, neighbours in undirected.items()}
+    degrees = {n: len(neighbors) for n, neighbors in undirected.items()}
     sorted_nodes = sorted(degrees, key=lambda n: degrees[n], reverse=True)
 
     lines: list[str] = ["Graph adjacency list", "====================", ""]
     for node in sorted_nodes:
-        neighbours = sorted(undirected[node])
+        neighbors = sorted(undirected[node])
         lines.append(f"{node}  (degree {degrees[node]})")
-        for nb in neighbours:
+        for nb in neighbors:
             lines.append(f"  → {nb}")
         lines.append("")
 
@@ -211,7 +211,7 @@ def plot_graph(graph: dict[str, set[str]], output_path: Path) -> None:
     by degree, multi-layer glow, soft semi-transparent edges, clean labels.
     """
     BG_DARK = "#05050f"  # near-black with a hint of blue
-    BG_MID = "#0f0a2a"  # deep indigo at the centre
+    BG_MID = "#0f0a2a"  # deep indigo at the center
     EDGE_COLOR = "#c4b5fd"  # soft lavender edges
 
     G = nx.DiGraph()

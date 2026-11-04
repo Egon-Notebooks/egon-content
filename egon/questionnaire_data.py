@@ -1,6 +1,6 @@
 """Clinically validated self-assessment questionnaire definitions.
 
-All instruments included here are open-licence and may be reproduced freely.
+All instruments included here are open-license and may be reproduced freely.
 Exact question wording is preserved — paraphrasing invalidates psychometrics.
 
 Sources
@@ -42,7 +42,7 @@ class Questionnaire:
     scoring_formula: str  # Plain-text description of how to score
     interpretation: list[ScoringBand]
     safe_messaging_note: str | None  # Shown at the bottom if present
-    licence: str
+    license: str
     citation: str
     tags: list[str] = field(default_factory=list)
 
@@ -102,7 +102,7 @@ PHQ9 = Questionnaire(
         "If you scored 1 or more on question 9 (thoughts of self-harm), "
         "please reach out to a mental health professional or a crisis support service."
     ),
-    licence="Public domain. No permission required for use or reproduction.",
+    license="Public domain. No permission required for use or reproduction.",
     citation=(
         "Kroenke K, Spitzer RL, Williams JB. "
         "The PHQ-9: validity of a brief depression severity measure. "
@@ -147,7 +147,7 @@ GAD7 = Questionnaire(
         ScoringBand("15–21", "Severe anxiety"),
     ],
     safe_messaging_note=None,
-    licence="Public domain. No permission required for use or reproduction.",
+    license="Public domain. No permission required for use or reproduction.",
     citation=(
         "Spitzer RL, Kroenke K, Williams JB, Löwe B. "
         "A brief measure for assessing generalized anxiety disorder. "
@@ -196,7 +196,7 @@ WHO5 = Questionnaire(
         ScoringBand("85–100 %", "High wellbeing"),
     ],
     safe_messaging_note=None,
-    licence=(
+    license=(
         "Freely available for use. Reproduced with permission from the "
         "WHO Regional Office for Europe."
     ),
@@ -279,7 +279,7 @@ PSS10 = Questionnaire(
         ScoringBand("27–40", "High perceived stress"),
     ],
     safe_messaging_note=None,
-    licence=(
+    license=(
         "Free to use for non-commercial purposes. "
         "Permission granted by Sheldon Cohen (Carnegie Mellon University)."
     ),
@@ -331,7 +331,7 @@ RSES = Questionnaire(
         ScoringBand("26–30", "High self-esteem"),
     ],
     safe_messaging_note=None,
-    licence="Public domain.",
+    license="Public domain.",
     citation=(
         "Rosenberg M. Society and the Adolescent Self-Image. Princeton University Press, 1965."
     ),
@@ -374,7 +374,7 @@ BRS = Questionnaire(
         ScoringBand("4.31–5.00", "High resilience"),
     ],
     safe_messaging_note=None,
-    licence="Free to use for non-commercial purposes.",
+    license="Free to use for non-commercial purposes.",
     citation=(
         "Smith BW, Dalen J, Wiggins K, Tooley E, Christopher P, Bernard J. "
         "The Brief Resilience Scale: assessing the ability to bounce back. "

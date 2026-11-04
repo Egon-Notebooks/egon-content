@@ -87,7 +87,7 @@ def generate_illustration(
 
     Raises:
         EnvironmentError: if OPENAI_API_KEY is not set.
-        ValueError: if size or quality is not recognised.
+        ValueError: if size or quality is not recognized.
         OpenAIError: if the API request fails.
     """
     if size not in _ILLUSTRATION_SIZES:

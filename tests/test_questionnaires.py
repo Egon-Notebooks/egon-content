@@ -47,7 +47,7 @@ class TestQuestionnaireData:
 
     def test_all_have_licence_and_citation(self):
         for q in ALL_QUESTIONNAIRES:
-            assert q.licence
+            assert q.license
             assert q.citation
 
     def test_all_have_tags(self):
