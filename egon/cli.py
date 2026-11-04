@@ -23,7 +23,10 @@ import typer
 from dotenv import load_dotenv
 from openai import OpenAIError
 
+from egon.demo.journal_generator import generate_persona_entries, plan_persona_entries
+from egon.demo.personas import PERSONAS, PERSONAS_BY_SLUG
 from egon.generators import logseq, obsidian
+from egon.generators.journal_entry import format_logseq, format_obsidian
 from egon.graph import (
     build_graph,
     compute_report,
@@ -316,6 +319,133 @@ def illustrate(
         raise typer.Exit(code=1)
 
     typer.echo(f"Illustration saved -> {output}")
+
+
+@app.command(name="demo-journals")
+def demo_journals(
+    app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
+    persona_slug: str = typer.Option(
+        None, "--persona", help="Generate only one persona by slug (default: all personas)"
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Preview filenames without making API calls"
+    ),
+) -> None:
+    """Generate a year of demo journal entries for fictional personas.
+
+    Writes one vault per persona under generated_content/demo/<persona-slug>/<app>/.
+    Each persona has ~200 entries across 2025, written by Claude in a consistent voice.
+
+    Available persona slugs: lena-fischer, marcus-webb, priya-sharma, david-osei
+    """
+    from datetime import date
+
+    start = date(2025, 1, 1)
+    end = date(2025, 12, 31)
+
+    personas = PERSONAS
+    if persona_slug:
+        if persona_slug not in PERSONAS_BY_SLUG:
+            available = ", ".join(p.slug for p in PERSONAS)
+            typer.echo(f"Error: Unknown persona '{persona_slug}'. Available: {available}", err=True)
+            raise typer.Exit(code=1)
+        personas = [PERSONAS_BY_SLUG[persona_slug]]
+
+    if dry_run:
+        for persona in personas:
+            dates = plan_persona_entries(persona, start, end)
+            typer.echo(f"\nPersona: {persona.name} ({persona.slug}) — {len(dates)} entries")
+            for d in dates:
+                if app_name == App.obsidian:
+                    filename = f"Journal — {d.strftime('%Y-%m-%d')}.md"
+                    path = OUTPUT_ROOT / "demo" / persona.slug / "obsidian" / filename
+                else:
+                    filename = d.strftime("%Y_%m_%d") + ".md"
+                    path = OUTPUT_ROOT / "demo" / persona.slug / "logseq" / "journals" / filename
+                status = "(exists)" if path.exists() else "(new)"
+                typer.echo(f"  [dry-run] {path.relative_to(OUTPUT_ROOT)} {status}")
+        return
+
+    client = _get_client()
+    formatter = format_obsidian if app_name == App.obsidian else format_logseq
+
+    for persona in personas:
+        typer.echo(f"\nGenerating journal for {persona.name} ({persona.slug}) ...")
+
+        if app_name == App.obsidian:
+            out_dir = OUTPUT_ROOT / "demo" / persona.slug / "obsidian"
+        else:
+            out_dir = OUTPUT_ROOT / "demo" / persona.slug / "logseq" / "journals"
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        try:
+            entries = generate_persona_entries(client, persona, start, end)
+        except anthropic.RateLimitError:
+            typer.echo("Error: API rate limit reached. Wait a moment and try again.", err=True)
+            raise typer.Exit(code=1)
+        except anthropic.AuthenticationError:
+            typer.echo(
+                "Error: Invalid API key. Check ANTHROPIC_API_KEY in your .env file.", err=True
+            )
+            raise typer.Exit(code=1)
+        except anthropic.APIError as e:
+            typer.echo(f"Error: API request failed — {e}", err=True)
+            raise typer.Exit(code=1)
+
+        written = 0
+        skipped = 0
+        for entry in entries:
+            filename, content = formatter(
+                entry.date, entry.body, entry.mood, entry.energy, entry.tags
+            )
+            dest = out_dir / filename
+            if dest.exists():
+                skipped += 1
+                continue
+            dest.write_text(content, encoding="utf-8")
+            written += 1
+
+        typer.echo(f"  {written} entries written, {skipped} skipped (already exist) -> {out_dir}")
+
+    typer.echo(f"\nDone. Demo journals saved to {OUTPUT_ROOT / 'demo'}")
+
+
+@app.command(name="demo-health")
+def demo_health(
+    persona_slug: str = typer.Option(
+        None, "--persona", help="Generate only one persona by slug (default: all personas)"
+    ),
+    year: int = typer.Option(2025, "--year", help="Calendar year to generate"),
+) -> None:
+    """Generate a synthetic Apple Health export for demo personas.
+
+    Daily health data follows the mood in each persona's journal (run demo-journals first),
+    so sleep, heart rate and activity move plausibly with how they feel. Deterministic: the
+    same journal always gives the same export.xml, written to
+    generated_content/demo/<persona-slug>/apple_health_export/export.xml.
+    """
+    from datetime import date
+
+    from egon.demo.health import write_export
+
+    personas = PERSONAS
+    if persona_slug:
+        if persona_slug not in PERSONAS_BY_SLUG:
+            available = ", ".join(p.slug for p in PERSONAS)
+            typer.echo(f"Error: Unknown persona '{persona_slug}'. Available: {available}", err=True)
+            raise typer.Exit(code=1)
+        personas = [PERSONAS_BY_SLUG[persona_slug]]
+
+    for persona in personas:
+        journal_dir = OUTPUT_ROOT / "demo" / persona.slug / "obsidian"
+        if not any(journal_dir.glob("*.md")):
+            typer.echo(
+                f"  – {persona.slug}: no journal entries in {journal_dir} (run demo-journals)"
+            )
+            continue
+        out = OUTPUT_ROOT / "demo" / persona.slug / "apple_health_export" / "export.xml"
+        n = write_export(persona, journal_dir, out, date(year, 1, 1), date(year, 12, 31))
+        typer.echo(f"  ✓ {persona.slug:<14} {n:,} records -> {out.relative_to(OUTPUT_ROOT)}")
 
 
 @app.command(name="list-packs")

@@ -4,6 +4,15 @@ generated_content/**
 !generated_content/**/graph-report.txt
 !generated_content/**/graph-data.txt
 !generated_content/**/graph-plot.png
+# Synthetic demo personas: only the cached model scores are committed
+# (no real personal data).
+!generated_content/demo/
+!generated_content/demo/**/
+!generated_content/demo/**
+# ...except the demo journals and Apple Health exports, which stay local for now.
+generated_content/demo/*/obsidian/
+generated_content/demo/*/logseq/
+generated_content/demo/*/apple_health_export/
 
 # Environment
 .env
