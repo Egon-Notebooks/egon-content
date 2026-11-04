@@ -73,7 +73,7 @@ tags:
 {safe_note}
 ---
 
-*{q.licence}*
+*{q.license}*
 
 *{q.citation}*
 """.strip()
@@ -120,7 +120,7 @@ tags:: {tags_prop}
 - ## Interpretation
 {interp_rows}
 {safe_note}- ---
-- *{q.licence}*
+- *{q.license}*
 - *{q.citation}*
 """.strip()
 

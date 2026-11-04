@@ -1,8 +1,11 @@
 # egon-content
 
 [![Tests](https://github.com/Egon-Notebooks/egon-content/actions/workflows/tests.yml/badge.svg)](https://github.com/Egon-Notebooks/egon-content/actions/workflows/tests.yml)
+[![Lint](https://github.com/Egon-Notebooks/egon-content/actions/workflows/lint.yml/badge.svg)](https://github.com/Egon-Notebooks/egon-content/actions/workflows/lint.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Content: CC BY-NC 4.0](https://img.shields.io/badge/content-CC%20BY--NC%204.0-lightgrey)](LICENSE-content)
 
 A command-line tool for mental health professionals to generate and curate educational articles as Markdown files, formatted for [Logseq](https://logseq.com) or [Obsidian](https://obsidian.md).
 
@@ -309,3 +312,24 @@ Once the concept is proven, the following may be added:
 
 - Include templates for journaling options (e.g. prompting a reflection question)
 - Include self-assessment nodes (e.g. dimensional mood/anxiety scales)
+
+---
+
+## License
+
+- **Code:** [MIT License](LICENSE).
+- **Generated content** (content nodes, packs and illustrations under `generated_content/`):
+  [CC BY-NC 4.0](LICENSE-content) — free to use, share and adapt for non-commercial
+  purposes with attribution to Egon Notebooks.
+
+The clinically validated questionnaire instruments included in `egon/questionnaire_data.py` are not covered by this license. Each instrument carries its own terms, documented in that file. In particular:
+
+| Instrument | Terms |
+| --- | --- |
+| PHQ-9, GAD-7 | Public domain (Pfizer release) |
+| WHO-5 | Freely available (WHO Regional Office for Europe) |
+| PSS-10 | Free for use (Sheldon Cohen, Carnegie Mellon University) |
+| RSES | Public domain |
+| BRS | Free for use (Smith et al.) |
+
+Users are responsible for complying with the terms of each instrument in their own deployments.

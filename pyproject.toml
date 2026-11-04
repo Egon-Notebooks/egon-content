@@ -10,7 +10,7 @@ package = true
 
 [project]
 name = "egon-content"
-version = "0.1.0"
+version = "0.2.0"
 description = "CLI tool to generate mental health Markdown articles for Logseq or Obsidian"
 requires-python = ">=3.13"
 dependencies = [

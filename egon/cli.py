@@ -221,7 +221,7 @@ def generate_all(
 def graph_report(
     app_name: App = typer.Option(..., "--app", help="Target app: logseq or obsidian"),
 ) -> None:
-    """Analyse the generated node graph and print structural metrics."""
+    """Analyze the generated node graph and print structural metrics."""
     nodes_dir = OUTPUT_ROOT / app_name.value / "nodes"
     if not nodes_dir.exists() or not any(nodes_dir.glob("*.md")):
         typer.echo(f"No nodes found in {nodes_dir}. Generate some content first.", err=True)
