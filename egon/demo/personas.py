@@ -1,6 +1,28 @@
-"""Demo personas for the journal generator."""
+"""Demo personas: synthetic people whose journals and health data power demo reports.
+
+Each persona embodies one archetype from the product docs
+(``docs/USER_PERSONAS.md``) and has a baseline physiology from which a synthetic
+Apple Health export is generated (``egon.demo.health``).  Nothing here describes
+a real person.
+"""
 
 from dataclasses import dataclass, field
+
+
+@dataclass(frozen=True)
+class HealthProfile:
+    """Typical values on an average day; daily data varies around these."""
+
+    weight_kg: float
+    resting_hr: float  # beats per minute
+    hrv_ms: float  # SDNN
+    steps: float  # per day
+    exercise_min: float  # Apple Exercise Time per day
+    sleep_h: float  # time asleep per night
+    bedtime: float  # hours after 18:00 (5.0 = 23:00)
+    vo2max: float  # mL/min·kg
+    lean_mass_kg: float | None = None  # only for personas with a smart scale
+    weigh_ins_per_week: float = 3.0
 
 
 @dataclass
@@ -10,6 +32,8 @@ class Persona:
     age: int
     occupation: str
     background: str
+    archetype: str  # persona name from docs/USER_PERSONAS.md
+    health: HealthProfile
     entry_days_per_week: float = 4.5
     tags: list[str] = field(default_factory=list)
 
@@ -17,6 +41,18 @@ class Persona:
 PERSONAS: list[Persona] = [
     Persona(
         slug="lena-fischer",
+        archetype="Modern Stoic / Journaler",
+        health=HealthProfile(
+            weight_kg=61,
+            resting_hr=62,
+            hrv_ms=48,
+            steps=9500,
+            exercise_min=35,
+            sleep_h=7.4,
+            bedtime=5.0,
+            vo2max=40,
+            weigh_ins_per_week=1.5,
+        ),
         name="Lena Fischer",
         age=29,
         occupation="UX Designer",
@@ -52,6 +88,18 @@ Emotional arc across the year:
     ),
     Persona(
         slug="marcus-webb",
+        archetype="Therapy-Adjacent",
+        health=HealthProfile(
+            weight_kg=86,
+            resting_hr=64,
+            hrv_ms=38,
+            steps=7500,
+            exercise_min=28,
+            sleep_h=6.8,
+            bedtime=5.3,
+            vo2max=38,
+            weigh_ins_per_week=4,
+        ),
         name="Marcus Webb",
         age=45,
         occupation="High School History Teacher",
@@ -87,6 +135,18 @@ Emotional arc across the year:
     ),
     Persona(
         slug="priya-sharma",
+        archetype="PKM Power User",
+        health=HealthProfile(
+            weight_kg=56,
+            resting_hr=66,
+            hrv_ms=45,
+            steps=7000,
+            exercise_min=20,
+            sleep_h=6.6,
+            bedtime=6.0,
+            vo2max=36,
+            weigh_ins_per_week=1,
+        ),
         name="Priya Sharma",
         age=26,
         occupation="PhD Student (Neuroscience)",
@@ -123,6 +183,19 @@ Emotional arc across the year:
     ),
     Persona(
         slug="david-osei",
+        archetype="Self-Directed Individual",
+        health=HealthProfile(
+            weight_kg=84,
+            resting_hr=63,
+            hrv_ms=32,
+            steps=6500,
+            exercise_min=25,
+            sleep_h=7.1,
+            bedtime=4.5,
+            vo2max=31,
+            lean_mass_kg=62,
+            weigh_ins_per_week=6,
+        ),
         name="David Osei",
         age=58,
         occupation="Retired Hospital Administrator",
@@ -160,3 +233,6 @@ Emotional arc across the year:
 ]
 
 PERSONAS_BY_SLUG: dict[str, Persona] = {p.slug: p for p in PERSONAS}
+
+# The persona used for the demo report on the website and in the README.
+FLAGSHIP_SLUG = "david-osei"

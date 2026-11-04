@@ -410,6 +410,44 @@ def demo_journals(
     typer.echo(f"\nDone. Demo journals saved to {OUTPUT_ROOT / 'demo'}")
 
 
+@app.command(name="demo-health")
+def demo_health(
+    persona_slug: str = typer.Option(
+        None, "--persona", help="Generate only one persona by slug (default: all personas)"
+    ),
+    year: int = typer.Option(2025, "--year", help="Calendar year to generate"),
+) -> None:
+    """Generate a synthetic Apple Health export for demo personas.
+
+    Daily health data follows the mood in each persona's journal (run demo-journals first),
+    so sleep, heart rate and activity move plausibly with how they feel. Deterministic: the
+    same journal always gives the same export.xml, written to
+    generated_content/demo/<persona-slug>/apple_health_export/export.xml.
+    """
+    from datetime import date
+
+    from egon.demo.health import write_export
+
+    personas = PERSONAS
+    if persona_slug:
+        if persona_slug not in PERSONAS_BY_SLUG:
+            available = ", ".join(p.slug for p in PERSONAS)
+            typer.echo(f"Error: Unknown persona '{persona_slug}'. Available: {available}", err=True)
+            raise typer.Exit(code=1)
+        personas = [PERSONAS_BY_SLUG[persona_slug]]
+
+    for persona in personas:
+        journal_dir = OUTPUT_ROOT / "demo" / persona.slug / "obsidian"
+        if not any(journal_dir.glob("*.md")):
+            typer.echo(
+                f"  – {persona.slug}: no journal entries in {journal_dir} (run demo-journals)"
+            )
+            continue
+        out = OUTPUT_ROOT / "demo" / persona.slug / "apple_health_export" / "export.xml"
+        n = write_export(persona, journal_dir, out, date(year, 1, 1), date(year, 12, 31))
+        typer.echo(f"  ✓ {persona.slug:<14} {n:,} records -> {out.relative_to(OUTPUT_ROOT)}")
+
+
 @app.command(name="list-packs")
 def list_packs() -> None:
     """List all available topic packs and their topics."""
