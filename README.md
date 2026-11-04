@@ -309,3 +309,24 @@ Once the concept is proven, the following may be added:
 
 - Include templates for journaling options (e.g. prompting a reflection question)
 - Include self-assessment nodes (e.g. dimensional mood/anxiety scales)
+
+---
+
+## License
+
+- **Code:** [MIT License](LICENSE).
+- **Generated content** (content nodes, packs and illustrations under `generated_content/`):
+  [CC BY-NC 4.0](LICENSE-content) — free to use, share and adapt for non-commercial
+  purposes with attribution to Egon Notebooks.
+
+The clinically validated questionnaire instruments included in `egon/questionnaire_data.py` are not covered by this license. Each instrument carries its own terms, documented in that file. In particular:
+
+| Instrument | Terms |
+| --- | --- |
+| PHQ-9, GAD-7 | Public domain (Pfizer release) |
+| WHO-5 | Freely available (WHO Regional Office for Europe) |
+| PSS-10 | Free for use (Sheldon Cohen, Carnegie Mellon University) |
+| RSES | Public domain |
+| BRS | Free for use (Smith et al.) |
+
+Users are responsible for complying with the terms of each instrument in their own deployments.
