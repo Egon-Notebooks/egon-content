@@ -7,6 +7,7 @@ Each entry includes a date, mood rating, energy level, tags, and prose body.
 import calendar
 import json
 import random
+import zlib
 from datetime import date
 from typing import NamedTuple
 
@@ -41,6 +42,11 @@ Each element must have exactly these fields:
 
 CRITICAL: The "body" value must be a valid JSON string. Escape all newlines as \\n — never include literal line breaks inside a JSON string value.
 """
+
+
+def _month_seed(slug: str, year: int, month: int) -> int:
+    """Stable seed per persona-month (Python's hash() of a str changes every run)."""
+    return zlib.crc32(f"{slug}:{year}-{month:02d}".encode())
 
 
 def _select_entry_dates(year: int, month: int, persona: Persona, seed: int) -> list[date]:
@@ -109,8 +115,7 @@ def generate_month(
     model: str = "claude-sonnet-4-6",
 ) -> list[EntryData]:
     """Generate all journal entries for one calendar month of one persona."""
-    seed = hash((persona.slug, year, month)) & 0xFFFFFFFF
-    dates = _select_entry_dates(year, month, persona, seed)
+    dates = _select_entry_dates(year, month, persona, _month_seed(persona.slug, year, month))
     if not dates:
         return []
 
@@ -153,8 +158,9 @@ def plan_persona_entries(persona: Persona, start: date, end: date) -> list[date]
     dates: list[date] = []
     year, month = start.year, start.month
     while (year, month) <= (end.year, end.month):
-        seed = hash((persona.slug, year, month)) & 0xFFFFFFFF
-        dates.extend(_select_entry_dates(year, month, persona, seed))
+        dates.extend(
+            _select_entry_dates(year, month, persona, _month_seed(persona.slug, year, month))
+        )
         month += 1
         if month > 12:
             month = 1
