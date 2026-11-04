@@ -1,8 +1,11 @@
 # egon-content
 
 [![Tests](https://github.com/Egon-Notebooks/egon-content/actions/workflows/tests.yml/badge.svg)](https://github.com/Egon-Notebooks/egon-content/actions/workflows/tests.yml)
+[![Lint](https://github.com/Egon-Notebooks/egon-content/actions/workflows/lint.yml/badge.svg)](https://github.com/Egon-Notebooks/egon-content/actions/workflows/lint.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Content: CC BY-NC 4.0](https://img.shields.io/badge/content-CC%20BY--NC%204.0-lightgrey)](LICENSE-content)
 
 A command-line tool for mental health professionals to generate and curate educational articles as Markdown files, formatted for [Logseq](https://logseq.com) or [Obsidian](https://obsidian.md).
 
