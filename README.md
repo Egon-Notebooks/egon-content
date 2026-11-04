@@ -196,6 +196,49 @@ Aliases appear in the node's metadata and are also matched when injecting wikili
 
 ---
 
+## Demo personas
+
+Four fictional people, each embodying one archetype from the product docs
+(`docs/USER_PERSONAS.md`), power the demo reports on the website. Nothing here describes a
+real person.
+
+| Persona | Archetype | Story in 2025 |
+| --- | --- | --- |
+| David Osei (`david-osei`) — flagship | Self-Directed Individual | Early retirement after a cardiac event; loneliness, then purpose |
+| Marcus Webb (`marcus-webb`) | Therapy-Adjacent | Divorce, depression and therapy; slow recovery |
+| Priya Sharma (`priya-sharma`) | PKM Power User | PhD perfectionism and impostor syndrome |
+| Lena Fischer (`lena-fischer`) | Modern Stoic / Journaler | Relocation, social anxiety, mindfulness practice |
+
+```bash
+# 1. A year of journal entries per persona, written by Claude (costs API credits)
+uv run egon demo-journals --app obsidian [--persona david-osei]
+
+# 2. A synthetic Apple Health export that follows each persona's journal mood
+uv run egon demo-health [--persona david-osei]
+```
+
+Everything lands in `generated_content/demo/<persona>/`:
+
+- `obsidian/` — the journal. **Kept local for now (git-ignored)**; the LLM step is not
+  deterministic, so keep a backup — everything else is derived from it.
+- `apple_health_export/export.xml` — kept local for now (git-ignored); regenerate it any time
+  with `demo-health`. Deterministic: the same journal always gives the same file.
+  Daily sleep, heart rate, HRV, steps, exercise, weight and VO₂ max move with the journal's
+  1–5 mood rating, with realistic noise, weekend effects and days without the watch. The file
+  carries a "Synthetic demo data" marker that egon-journal's `demo-report` requires.
+- `model_scores/<period>/` — committed (scores and AI text only, no journal text). Written by egon-journal when it builds a demo report
+  (model scores and AI text), so with the journal at hand the report can be rebuilt without
+  running the models.
+
+To build the report (in egon-journal):
+
+```bash
+uv run egon demo-report --data ../egon-content/generated_content/demo/david-osei \
+  --persona "David Osei (Self-Directed Individual)" --for 2025-Q1
+```
+
+---
+
 ## Reviewing generated content
 
 ### Logseq
