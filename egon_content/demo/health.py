@@ -12,7 +12,7 @@ The output is a standard ``export.xml`` that egon-journal reads like any real
 export.  Generation is deterministic: the same journal and persona always give
 the same file.
 
-    from egon.demo.health import write_export
+    from egon_content.demo.health import write_export
     write_export(persona, journal_dir, out_path, start, end)
 """
 
@@ -25,7 +25,7 @@ from pathlib import Path
 from statistics import mean
 from xml.sax.saxutils import quoteattr
 
-from egon.demo.personas import Persona
+from egon_content.demo.personas import Persona
 
 _MOOD_RE = re.compile(r'^mood:\s*"?\s*([1-5])', re.MULTILINE)
 _DATE_RE = re.compile(r"^date:\s*(\d{4}-\d{2}-\d{2})", re.MULTILINE)

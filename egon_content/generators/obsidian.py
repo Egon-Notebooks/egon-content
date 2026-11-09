@@ -5,7 +5,7 @@ Obsidian uses YAML frontmatter for metadata and prose paragraphs for content.
 
 from datetime import date
 
-from egon.generators import _to_filename
+from egon_content.generators import _to_filename
 
 
 def format(

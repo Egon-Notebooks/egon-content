@@ -6,7 +6,7 @@ and expects content in its outline (bullet-point) format.
 
 from datetime import date
 
-from egon.generators import _to_filename
+from egon_content.generators import _to_filename
 
 
 def format(

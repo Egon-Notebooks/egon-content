@@ -23,11 +23,11 @@ import typer
 from dotenv import load_dotenv
 from openai import OpenAIError
 
-from egon.demo.journal_generator import generate_persona_entries, plan_persona_entries
-from egon.demo.personas import PERSONAS, PERSONAS_BY_SLUG
-from egon.generators import logseq, obsidian
-from egon.generators.journal_entry import format_logseq, format_obsidian
-from egon.graph import (
+from egon_content.demo.journal_generator import generate_persona_entries, plan_persona_entries
+from egon_content.demo.personas import PERSONAS, PERSONAS_BY_SLUG
+from egon_content.generators import logseq, obsidian
+from egon_content.generators.journal_entry import format_logseq, format_obsidian
+from egon_content.graph import (
     build_graph,
     compute_report,
     format_report,
@@ -35,10 +35,10 @@ from egon.graph import (
     save_graph_data,
     save_report,
 )
-from egon.image_generator import generate_illustration, generate_image
-from egon.linker import apply_wikilinks, get_aliases
-from egon.packs import BASE_PACKS, PACKS
-from egon.prompts import (
+from egon_content.image_generator import generate_illustration, generate_image
+from egon_content.linker import apply_wikilinks, get_aliases
+from egon_content.packs import BASE_PACKS, PACKS
+from egon_content.prompts import (
     CRISIS_NOTE,
     DISCLAIMER,
     SYSTEM_PROMPT,
@@ -46,8 +46,8 @@ from egon.prompts import (
     needs_crisis_note,
     parse_response,
 )
-from egon.questionnaire_data import ALL_QUESTIONNAIRES
-from egon.questionnaire_formatter import format_questionnaire
+from egon_content.questionnaire_data import ALL_QUESTIONNAIRES
+from egon_content.questionnaire_formatter import format_questionnaire
 
 load_dotenv()
 
@@ -465,7 +465,7 @@ def demo_health(
     """
     from datetime import date
 
-    from egon.demo.health import write_export
+    from egon_content.demo.health import write_export
 
     personas = PERSONAS
     if persona_slug:

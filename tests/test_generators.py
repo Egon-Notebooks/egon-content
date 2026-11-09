@@ -1,8 +1,8 @@
 """Unit tests for Logseq and Obsidian formatters."""
 
-from egon.generators import logseq, obsidian
-from egon.linker import apply_wikilinks, get_aliases
-from egon.prompts import build_user_prompt, parse_response
+from egon_content.generators import logseq, obsidian
+from egon_content.linker import apply_wikilinks, get_aliases
+from egon_content.prompts import build_user_prompt, parse_response
 
 SAMPLE_TOPIC = "Managing social anxiety"
 SAMPLE_BODY = (

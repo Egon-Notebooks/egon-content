@@ -14,7 +14,7 @@ from typing import NamedTuple
 import anthropic
 from json_repair import repair_json
 
-from egon.demo.personas import Persona
+from egon_content.demo.personas import Persona
 
 
 class EntryData(NamedTuple):
