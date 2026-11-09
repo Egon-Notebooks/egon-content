@@ -58,7 +58,7 @@ OPENAI_API_KEY=your-openai-key-here   # only needed for image generation
 **Generate a single article (with image by default):**
 
 ```bash
-uv run egon generate --app logseq --topic "Managing social anxiety"
+uv run egon-content generate --app logseq --topic "Managing social anxiety"
 ```
 
 Output files are written to `generated_content/<app>/nodes/`, named after the topic title (e.g. `Managing social anxiety.md`).
@@ -68,32 +68,32 @@ If a file already exists, you will be prompted whether to overwrite it.
 **Generate without an image:**
 
 ```bash
-uv run egon generate --app obsidian --topic "Joy" --no-image
+uv run egon-content generate --app obsidian --topic "Joy" --no-image
 ```
 
 **Generate a single pack (collection of articles):**
 
 ```bash
-uv run egon pack --app obsidian --pack anxiety-and-worry
+uv run egon-content pack --app obsidian --pack anxiety-and-worry
 ```
 
 **Generate the full base collection (all base collection packs):**
 
 ```bash
-uv run egon generate-all --app logseq --no-image
+uv run egon-content generate-all --app logseq --no-image
 ```
 
 **Preview what would be generated without making API calls (dry run option):**
 
 ```bash
-uv run egon generate-all --app obsidian --dry-run
-uv run egon pack --app obsidian --pack anxiety-and-worry --dry-run
+uv run egon-content generate-all --app obsidian --dry-run
+uv run egon-content pack --app obsidian --pack anxiety-and-worry --dry-run
 ```
 
 **Analyze the node graph of the base collection:**
 
 ```bash
-uv run egon graph-report --app obsidian
+uv run egon-content graph-report --app obsidian
 ```
 
 This prints a structural overview and saves three files under `generated_content/<app>/`:
@@ -127,7 +127,7 @@ Edges are unweighted; self-loops are excluded.
 **Install clinically validated questionnaire templates:**
 
 ```bash
-uv run egon install-questionnaires --app obsidian
+uv run egon-content install-questionnaires --app obsidian
 ```
 
 Writes one Markdown template per questionnaire to `generated_content/<app>/nodes/`.
@@ -150,15 +150,15 @@ Each template is formatted for use as a monthly journal entry — questions are 
 **Generate a standalone pencil-sketch illustration:**
 
 ```bash
-uv run egon illustrate --description "a lighthouse in a storm"
+uv run egon-content illustrate --description "a lighthouse in a storm"
 ```
 
 Images are saved to `generated_content/illustrations/` with an auto-generated filename based on the description and a timestamp.
 Use `--output` to specify a custom path, `--size` to choose the aspect ratio, and `--quality high` for a higher-detail render:
 
 ```bash
-uv run egon illustrate --description "brain with interconnected nodes" --size square --quality high
-uv run egon illustrate --description "calm ocean at dawn" --output exports/ocean.webp
+uv run egon-content illustrate --description "brain with interconnected nodes" --size square --quality high
+uv run egon-content illustrate --description "calm ocean at dawn" --output exports/ocean.webp
 ```
 
 Available sizes: `landscape` (1792×1024, default), `square` (1024×1024), `portrait` (1024×1792).
@@ -166,7 +166,7 @@ Available sizes: `landscape` (1792×1024, default), `square` (1024×1024), `port
 **List all available packs and topics:**
 
 ```bash
-uv run egon list-packs
+uv run egon-content list-packs
 ```
 
 ---
@@ -189,12 +189,12 @@ Each node is a Markdown file containing:
 
 ### Adding packs or topics
 
-Open `egon/packs.py` and add a new pack key with a list of topic strings, or append topics to an existing pack.
-Run `uv run egon generate-all` to generate the new content.
+Open `egon_content/packs.py` and add a new pack key with a list of topic strings, or append topics to an existing pack.
+Run `uv run egon-content generate-all` to generate the new content.
 
 ### Adding aliases
 
-Open `egon/linker.py` and add entries to the `TOPIC_ALIASES` dictionary.
+Open `egon_content/linker.py` and add entries to the `TOPIC_ALIASES` dictionary.
 Aliases appear in the node's metadata and are also matched when injecting wikilinks into body text.
 
 ---
@@ -214,10 +214,10 @@ real person.
 
 ```bash
 # 1. A year of journal entries per persona, written by Claude (costs API credits)
-uv run egon demo-journals --app obsidian [--persona david-osei]
+uv run egon-content demo-journals --app obsidian [--persona david-osei]
 
 # 2. A synthetic Apple Health export that follows each persona's journal mood
-uv run egon demo-health [--persona david-osei]
+uv run egon-content demo-health [--persona david-osei]
 ```
 
 Everything lands in `generated_content/demo/<persona>/`:
@@ -265,7 +265,7 @@ uv run egon demo-report --data ../egon-content/generated_content/demo/david-osei
 ## Project structure
 
 ```text
-egon/
+egon_content/
 ├── cli.py                      # CLI entry point (generate, pack, generate-all, graph-report,
 │                               #   install-questionnaires, illustrate, list-packs)
 ├── packs.py                    # Topic pack definitions (BASE_PACKS controls the base graph)
@@ -322,7 +322,7 @@ Once the concept is proven, the following may be added:
   [CC BY-NC 4.0](LICENSE-content) — free to use, share and adapt for non-commercial
   purposes with attribution to Egon Notebooks.
 
-The clinically validated questionnaire instruments included in `egon/questionnaire_data.py` are not covered by this license. Each instrument carries its own terms, documented in that file. In particular:
+The clinically validated questionnaire instruments included in `egon_content/questionnaire_data.py` are not covered by this license. Each instrument carries its own terms, documented in that file. In particular:
 
 | Instrument | Terms |
 | --- | --- |

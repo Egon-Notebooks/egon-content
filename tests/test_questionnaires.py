@@ -2,8 +2,8 @@
 
 import pytest
 
-from egon.questionnaire_data import ALL_QUESTIONNAIRES, BRS, GAD7, PHQ9, PSS10, RSES, WHO5
-from egon.questionnaire_formatter import format_questionnaire
+from egon_content.questionnaire_data import ALL_QUESTIONNAIRES, BRS, GAD7, PHQ9, PSS10, RSES, WHO5
+from egon_content.questionnaire_formatter import format_questionnaire
 
 
 class TestQuestionnaireData:

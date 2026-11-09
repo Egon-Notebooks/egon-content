@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from egon.graph import (
+from egon_content.graph import (
     GraphReport,
     build_graph,
     compute_report,

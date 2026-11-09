@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 from PIL import Image as PILImage
 from typer.testing import CliRunner
 
-from egon.cli import app
+from egon_content.cli import app
 
 runner = CliRunner()
 
@@ -37,7 +37,7 @@ def _mock_openai():
 class TestGenerateCommand:
     def test_generate_dry_run(self, tmp_path, monkeypatch):
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
-        with patch("egon.cli.OUTPUT_ROOT", tmp_path):
+        with patch("egon_content.cli.OUTPUT_ROOT", tmp_path):
             result = runner.invoke(
                 app,
                 [
@@ -58,9 +58,9 @@ class TestGenerateCommand:
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
         mock_client = _mock_anthropic()
         with (
-            patch("egon.cli.OUTPUT_ROOT", tmp_path),
-            patch("egon.cli._get_client", return_value=mock_client),
-            patch("egon.cli.generate_image"),
+            patch("egon_content.cli.OUTPUT_ROOT", tmp_path),
+            patch("egon_content.cli._get_client", return_value=mock_client),
+            patch("egon_content.cli.generate_image"),
         ):
             result = runner.invoke(
                 app,
@@ -96,9 +96,9 @@ class TestGenerateCommand:
         mock_client = _mock_anthropic()
         mock_openai = _mock_openai()
         with (
-            patch("egon.cli.OUTPUT_ROOT", tmp_path),
-            patch("egon.cli._get_client", return_value=mock_client),
-            patch("egon.image_generator.OpenAI", return_value=mock_openai),
+            patch("egon_content.cli.OUTPUT_ROOT", tmp_path),
+            patch("egon_content.cli._get_client", return_value=mock_client),
+            patch("egon_content.image_generator.OpenAI", return_value=mock_openai),
         ):
             result = runner.invoke(
                 app,
@@ -120,8 +120,8 @@ class TestPackCommand:
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
         mock_client = _mock_anthropic()
         with (
-            patch("egon.cli.OUTPUT_ROOT", tmp_path),
-            patch("egon.cli._get_client", return_value=mock_client),
+            patch("egon_content.cli.OUTPUT_ROOT", tmp_path),
+            patch("egon_content.cli._get_client", return_value=mock_client),
         ):
             result = runner.invoke(
                 app,
@@ -158,8 +158,8 @@ class TestGenerateAllCommand:
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
         mock_client = _mock_anthropic()
         with (
-            patch("egon.cli.OUTPUT_ROOT", tmp_path),
-            patch("egon.cli._get_client", return_value=mock_client),
+            patch("egon_content.cli.OUTPUT_ROOT", tmp_path),
+            patch("egon_content.cli._get_client", return_value=mock_client),
         ):
             result = runner.invoke(
                 app,
@@ -179,8 +179,8 @@ class TestGenerateAllCommand:
         monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
         mock_client = _mock_anthropic()
         with (
-            patch("egon.cli.OUTPUT_ROOT", tmp_path),
-            patch("egon.cli._get_client", return_value=mock_client),
+            patch("egon_content.cli.OUTPUT_ROOT", tmp_path),
+            patch("egon_content.cli._get_client", return_value=mock_client),
         ):
             result = runner.invoke(
                 app,
@@ -198,7 +198,7 @@ class TestGenerateAllCommand:
 
 class TestGraphReportCommand:
     def test_no_nodes_exits(self, tmp_path, monkeypatch):
-        with patch("egon.cli.OUTPUT_ROOT", tmp_path):
+        with patch("egon_content.cli.OUTPUT_ROOT", tmp_path):
             result = runner.invoke(app, ["graph-report", "--app", "obsidian"])
         assert result.exit_code == 1
 
@@ -207,7 +207,7 @@ class TestGraphReportCommand:
         nodes_dir.mkdir(parents=True)
         (nodes_dir / "Anger.md").write_text("[[Fear]] is related.", encoding="utf-8")
         (nodes_dir / "Fear.md").write_text("No links.", encoding="utf-8")
-        with patch("egon.cli.OUTPUT_ROOT", tmp_path):
+        with patch("egon_content.cli.OUTPUT_ROOT", tmp_path):
             result = runner.invoke(app, ["graph-report", "--app", "obsidian"])
         assert result.exit_code == 0
         assert "Nodes:" in result.output

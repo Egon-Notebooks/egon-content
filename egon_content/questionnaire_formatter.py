@@ -4,9 +4,9 @@ Generates app-native Markdown from structured Questionnaire objects.
 The exact question wording from questionnaire_data.py is preserved verbatim.
 """
 
-from egon.generators import _to_filename
-from egon.prompts import CRISIS_NOTE
-from egon.questionnaire_data import Questionnaire
+from egon_content.generators import _to_filename
+from egon_content.prompts import CRISIS_NOTE
+from egon_content.questionnaire_data import Questionnaire
 
 
 def _obsidian(q: Questionnaire) -> str:

@@ -3,11 +3,11 @@
 import pytest
 from typer.testing import CliRunner
 
-from egon.cli import app
-from egon.generators import logseq, obsidian
-from egon.prompts import CRISIS_NOTE, needs_crisis_note
-from egon.questionnaire_data import ALL_QUESTIONNAIRES
-from egon.questionnaire_formatter import format_questionnaire
+from egon_content.cli import app
+from egon_content.generators import logseq, obsidian
+from egon_content.prompts import CRISIS_NOTE, needs_crisis_note
+from egon_content.questionnaire_data import ALL_QUESTIONNAIRES
+from egon_content.questionnaire_formatter import format_questionnaire
 
 runner = CliRunner()
 

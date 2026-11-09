@@ -31,7 +31,7 @@ jobs:
         run: uv sync --all-groups
 
       - name: Lint with ruff
-        run: uv run ruff check egon/ tests/
+        run: uv run ruff check egon_content/ tests/
 
       - name: Format check with ruff
-        run: uv run ruff format --check egon/ tests/
+        run: uv run ruff format --check egon_content/ tests/

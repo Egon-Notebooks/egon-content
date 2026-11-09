@@ -7,15 +7,15 @@ from statistics import mean
 
 import pytest
 
-from egon.demo.health import (
+from egon_content.demo.health import (
     daily_wellbeing,
     generate_records,
     read_moods,
     to_export_xml,
     write_export,
 )
-from egon.demo.journal_generator import _month_seed
-from egon.demo.personas import FLAGSHIP_SLUG, PERSONAS, PERSONAS_BY_SLUG
+from egon_content.demo.journal_generator import _month_seed
+from egon_content.demo.personas import FLAGSHIP_SLUG, PERSONAS, PERSONAS_BY_SLUG
 
 PERSONA = PERSONAS_BY_SLUG[FLAGSHIP_SLUG]
 START, END = date(2025, 1, 1), date(2025, 3, 31)
@@ -108,7 +108,7 @@ def test_export_is_deterministic_marked_and_well_formed(tmp_path):
 def test_xml_escapes_values():
     from datetime import datetime
 
-    from egon.demo.health import Record
+    from egon_content.demo.health import Record
 
     t = datetime(2025, 1, 1, 8)
     rec = Record("T", "u", t, t, 'a"<b>')
