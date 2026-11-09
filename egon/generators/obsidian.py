@@ -14,6 +14,7 @@ def format(
     disclaimer: str,
     tags: list[str] | None = None,
     aliases: list[str] | None = None,
+    crisis_note: str | None = None,
 ) -> tuple[str, str]:
     """Return (filename, markdown_content) for an Obsidian note."""
     today = date.today().isoformat()
@@ -39,5 +40,6 @@ def format(
         "---\n"
     )
 
-    content = f"{frontmatter}\n# {topic}\n\n{body.strip()}\n\n---\n\n{disclaimer}\n"
+    crisis_block = f"{crisis_note}\n\n" if crisis_note else ""
+    content = f"{frontmatter}\n# {topic}\n\n{crisis_block}{body.strip()}\n\n---\n\n{disclaimer}\n"
     return filename, content

@@ -38,7 +38,14 @@ from egon.graph import (
 from egon.image_generator import generate_illustration, generate_image
 from egon.linker import apply_wikilinks, get_aliases
 from egon.packs import BASE_PACKS, PACKS
-from egon.prompts import DISCLAIMER, SYSTEM_PROMPT, build_user_prompt, parse_response
+from egon.prompts import (
+    CRISIS_NOTE,
+    DISCLAIMER,
+    SYSTEM_PROMPT,
+    build_user_prompt,
+    needs_crisis_note,
+    parse_response,
+)
 from egon.questionnaire_data import ALL_QUESTIONNAIRES
 from egon.questionnaire_formatter import format_questionnaire
 
@@ -141,7 +148,10 @@ def _generate_and_save(
             typer.echo(f"  Warning: Image generation failed — {e}. Skipping image.", err=True)
             image_filename = None
 
-    _, content = formatter.format(topic, body, DISCLAIMER, tags, get_aliases(topic))
+    crisis_note = CRISIS_NOTE if needs_crisis_note(topic) else None
+    _, content = formatter.format(
+        topic, body, DISCLAIMER, tags, get_aliases(topic), crisis_note=crisis_note
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(content, encoding="utf-8")
     typer.echo(f"  Article saved -> {output_path}")
@@ -268,6 +278,35 @@ def install_questionnaires(
             typer.echo(f"  [written] {filename}")
 
     typer.echo(f"\n{len(ALL_QUESTIONNAIRES)} questionnaire templates written to {nodes_dir}")
+
+
+def _with_crisis_note(text: str) -> str:
+    """Return node *text* with the crisis note added under its title."""
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        if line.startswith("# "):
+            return "\n".join([*lines[: i + 1], "", CRISIS_NOTE, *lines[i + 1 :]])
+        if line.startswith("- # "):
+            return "\n".join([*lines[: i + 1], f"- {CRISIS_NOTE}", *lines[i + 1 :]])
+    first_bullet = next(i for i, line in enumerate(lines) if line.startswith("- "))
+    return "\n".join([*lines[:first_bullet], f"- {CRISIS_NOTE}", *lines[first_bullet:]])
+
+
+@app.command(name="add-crisis-notes")
+def add_crisis_notes(
+    nodes_dir: Path = typer.Option(..., "--nodes-dir", help="Folder of generated nodes to update"),
+) -> None:
+    """Add the crisis note to existing nodes that need one. No API call is made."""
+    added = 0
+    for path in sorted(nodes_dir.glob("*.md")):
+        text = path.read_text(encoding="utf-8")
+        is_questionnaire = re.search(r"^type::? questionnaire$", text, re.MULTILINE)
+        if "findahelpline.com" in text or not (is_questionnaire or needs_crisis_note(path.stem)):
+            continue
+        path.write_text(_with_crisis_note(text), encoding="utf-8")
+        typer.echo(f"  [updated] {path.name}")
+        added += 1
+    typer.echo(f"\nCrisis note added to {added} nodes in {nodes_dir}")
 
 
 @app.command()
