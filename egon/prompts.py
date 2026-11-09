@@ -11,6 +11,7 @@ Safe messaging guidelines incorporated:
 Edit prompts/article_system.txt to update the system prompt.
 """
 
+import re
 from pathlib import Path
 
 _PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
@@ -23,6 +24,22 @@ DISCLAIMER = (
     "and is not a substitute for professional mental health advice, diagnosis, "
     "or treatment._"
 )
+
+CRISIS_NOTE = (
+    "_If you are having a very hard time or thinking about harming yourself, you don't "
+    "have to face it alone. Crisis lines in your country are listed at "
+    "[findahelpline.com](https://findahelpline.com). If you are in immediate danger, "
+    "call your local emergency number._"
+)
+
+_CRISIS_TOPICS = re.compile(
+    r"suicid|self[- ]harm|depress|low (mood|period)|sadness|hopeless", re.IGNORECASE
+)
+
+
+def needs_crisis_note(topic: str) -> bool:
+    """Return True if *topic* is about low mood, self-harm or suicide (see docs/SAFETY.md)."""
+    return bool(_CRISIS_TOPICS.search(topic))
 
 
 def build_user_prompt(topic: str) -> str:

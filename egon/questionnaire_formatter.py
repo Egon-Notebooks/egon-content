@@ -5,6 +5,7 @@ The exact question wording from questionnaire_data.py is preserved verbatim.
 """
 
 from egon.generators import _to_filename
+from egon.prompts import CRISIS_NOTE
 from egon.questionnaire_data import Questionnaire
 
 
@@ -48,6 +49,8 @@ tags:
 ---
 
 # {q.abbreviation} — {q.full_name}
+
+{CRISIS_NOTE}
 
 *{q.frequency_note}*
 
@@ -105,6 +108,7 @@ measures:: {q.measures}
 tags:: {tags_prop}
 
 - # {q.abbreviation} — {q.full_name}
+- {CRISIS_NOTE}
 - *{q.frequency_note}*
 - ---
 - **{q.timeframe}**

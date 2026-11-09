@@ -15,6 +15,7 @@ def format(
     disclaimer: str,
     tags: list[str] | None = None,
     aliases: list[str] | None = None,
+    crisis_note: str | None = None,
 ) -> tuple[str, str]:
     """Return (filename, markdown_content) for a Logseq page."""
     today = date.today().isoformat()
@@ -27,6 +28,8 @@ def format(
     bullet_paragraphs = "\n".join(
         f"- {para.strip()}" for para in body.strip().split("\n\n") if para.strip()
     )
+    if crisis_note:
+        bullet_paragraphs = f"- {crisis_note}\n{bullet_paragraphs}"
     disclaimer_bullet = f"- {disclaimer}"
 
     content = f"{properties}\n{bullet_paragraphs}\n\n{disclaimer_bullet}\n"
