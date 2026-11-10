@@ -169,6 +169,17 @@ Available sizes: `landscape` (1792×1024, default), `square` (1024×1024), `port
 uv run egon-content list-packs
 ```
 
+### Node format
+
+Nodes follow [`NODE_SPEC.md`](https://github.com/Egon-Notebooks/docs) and carry
+`type` and `egon_version`. This release writes `egon_version` "1". To bring nodes made
+before v0.3 up to date, without any API call:
+
+```bash
+uv run egon-content upgrade-nodes --nodes-dir generated_content/obsidian/nodes --app obsidian
+uv run egon-content upgrade-nodes --nodes-dir generated_content/logseq/nodes --app logseq
+```
+
 ---
 
 ## What gets generated

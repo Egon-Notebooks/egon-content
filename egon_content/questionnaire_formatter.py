@@ -4,7 +4,10 @@ Generates app-native Markdown from structured Questionnaire objects.
 The exact question wording from questionnaire_data.py is preserved verbatim.
 """
 
+from datetime import date
+
 from egon_content.generators import _to_filename
+from egon_content.nodes import EGON_VERSION
 from egon_content.prompts import CRISIS_NOTE
 from egon_content.questionnaire_data import Questionnaire
 
@@ -41,11 +44,13 @@ def _obsidian(q: Questionnaire) -> str:
 
     return f"""---
 title: "{q.title}"
+date: {date.today().isoformat()}
 type: questionnaire
 questionnaire: {q.abbreviation}
 measures: {q.measures}
 tags:
 {tags_yaml}
+egon_version: "{EGON_VERSION}"
 ---
 
 # {q.abbreviation} — {q.full_name}
@@ -106,6 +111,7 @@ def _logseq(q: Questionnaire) -> str:
 questionnaire:: {q.abbreviation}
 measures:: {q.measures}
 tags:: {tags_prop}
+egon_version:: {EGON_VERSION}
 
 - # {q.abbreviation} — {q.full_name}
 - {CRISIS_NOTE}

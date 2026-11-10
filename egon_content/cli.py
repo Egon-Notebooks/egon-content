@@ -37,6 +37,7 @@ from egon_content.graph import (
 )
 from egon_content.image_generator import generate_illustration, generate_image
 from egon_content.linker import apply_wikilinks, get_aliases
+from egon_content.nodes import upgrade_node
 from egon_content.packs import BASE_PACKS, PACKS
 from egon_content.prompts import (
     CRISIS_NOTE,
@@ -290,6 +291,22 @@ def _with_crisis_note(text: str) -> str:
             return "\n".join([*lines[: i + 1], f"- {CRISIS_NOTE}", *lines[i + 1 :]])
     first_bullet = next(i for i, line in enumerate(lines) if line.startswith("- "))
     return "\n".join([*lines[:first_bullet], f"- {CRISIS_NOTE}", *lines[first_bullet:]])
+
+
+@app.command(name="upgrade-nodes")
+def upgrade_nodes(
+    nodes_dir: Path = typer.Option(..., "--nodes-dir", help="Folder of generated nodes to update"),
+    app_name: App = typer.Option(..., "--app", help="Format of the nodes: logseq or obsidian"),
+) -> None:
+    """Bring nodes from before v0.3 up to egon_version "1". No API call is made."""
+    updated = 0
+    for path in sorted(nodes_dir.glob("*.md")):
+        text = path.read_text(encoding="utf-8")
+        new = upgrade_node(text, app_name.value)
+        if new != text:
+            path.write_text(new, encoding="utf-8")
+            updated += 1
+    typer.echo(f"Updated {updated} nodes in {nodes_dir}")
 
 
 @app.command(name="add-crisis-notes")

@@ -6,6 +6,7 @@ Obsidian uses YAML frontmatter for metadata and prose paragraphs for content.
 from datetime import date
 
 from egon_content.generators import _to_filename
+from egon_content.nodes import EGON_VERSION
 
 
 def format(
@@ -32,11 +33,13 @@ def format(
     frontmatter = (
         "---\n"
         f'title: "{safe_title}"\n'
+        "type: article\n"
         f"author: Claude\n"
         f"date: {today}\n"
         f"{tags_yaml}"
         f"{aliases_yaml}"
         f"generated: true\n"
+        f'egon_version: "{EGON_VERSION}"\n'
         "---\n"
     )
 
