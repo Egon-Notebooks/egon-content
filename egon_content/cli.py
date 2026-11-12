@@ -106,6 +106,9 @@ def _generate_body(client: anthropic.Anthropic, topic: str) -> tuple[str, list[s
     return parse_response(message.content[0].text)
 
 
+_QUESTIONNAIRE_TITLES = frozenset(q.title for q in ALL_QUESTIONNAIRES)
+
+
 def _generate_and_save(
     client: anthropic.Anthropic,
     app_name: App,
@@ -113,6 +116,10 @@ def _generate_and_save(
     with_image: bool = True,
     dry_run: bool = False,
 ) -> Path | None:
+    if topic in _QUESTIONNAIRE_TITLES:
+        # A validated instrument, written verbatim by install-questionnaires; never by a model.
+        typer.echo(f"  [skip] {topic}: questionnaire template, use install-questionnaires")
+        return None
     formatter = logseq if app_name == App.logseq else obsidian
     filename, _ = formatter.format(topic, "", "")
     slug = filename.removesuffix(".md")

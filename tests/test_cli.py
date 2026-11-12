@@ -224,3 +224,15 @@ class TestListPacksCommand:
         assert "Base graph packs:" in result.output
         assert "Supplementary packs:" in result.output
         assert "bullying" in result.output
+
+
+def test_generate_all_never_writes_questionnaire_topics_with_a_model(tmp_path, monkeypatch):
+    from egon_content import cli
+    from egon_content.questionnaire_data import ALL_QUESTIONNAIRES
+
+    monkeypatch.setattr(cli, "OUTPUT_ROOT", tmp_path)
+    client = MagicMock()
+    for q in ALL_QUESTIONNAIRES:
+        assert cli._generate_and_save(client, cli.App.obsidian, q.title, with_image=False) is None
+    client.messages.create.assert_not_called()
+    assert not any(tmp_path.rglob("*.md"))
