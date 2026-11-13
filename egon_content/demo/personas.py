@@ -35,12 +35,14 @@ class Persona:
     archetype: str  # persona name from docs/USER_PERSONAS.md
     health: HealthProfile
     entry_days_per_week: float = 4.5
+    appearance: str = ""  # for the pencil portrait on the website; never a real likeness
     tags: list[str] = field(default_factory=list)
 
 
 PERSONAS: list[Persona] = [
     Persona(
         slug="lena-fischer",
+        appearance="a woman of 29, shoulder-length light brown hair loosely tucked behind one ear, a knitted scarf and a denim jacket, a bicycle and canal houses sketched faintly behind her",
         archetype="Modern Stoic / Journaler",
         health=HealthProfile(
             weight_kg=61,
@@ -88,6 +90,7 @@ Emotional arc across the year:
     ),
     Persona(
         slug="marcus-webb",
+        appearance="a man of 45 with short dark hair graying at the temples, a short beard and tired, kind eyes, wearing a flannel shirt, bookshelves faintly behind him",
         archetype="Therapy-Adjacent",
         health=HealthProfile(
             weight_kg=86,
@@ -135,6 +138,7 @@ Emotional arc across the year:
     ),
     Persona(
         slug="priya-sharma",
+        appearance="a British-Indian woman of 26 with long dark hair tied back, thin round glasses and a loose cardigan, a notebook full of diagrams faintly beside her",
         archetype="PKM Power User",
         health=HealthProfile(
             weight_kg=56,
@@ -183,6 +187,7 @@ Emotional arc across the year:
     ),
     Persona(
         slug="david-osei",
+        appearance="a Black British man of 58 with Ghanaian roots, close-cropped graying hair, reading glasses pushed up on his forehead and a cardigan over a collared shirt, garden leaves faintly behind him",
         archetype="Self-Directed Individual",
         health=HealthProfile(
             weight_kg=84,
