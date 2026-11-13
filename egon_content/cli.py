@@ -35,7 +35,7 @@ from egon_content.graph import (
     save_graph_data,
     save_report,
 )
-from egon_content.image_generator import generate_illustration, generate_image
+from egon_content.image_generator import generate_illustration, generate_image, generate_portrait
 from egon_content.linker import apply_wikilinks, get_aliases
 from egon_content.nodes import upgrade_node
 from egon_content.packs import BASE_PACKS, PACKS
@@ -471,6 +471,36 @@ def demo_journals(
         typer.echo(f"  {written} entries written, {skipped} skipped (already exist) -> {out_dir}")
 
     typer.echo(f"\nDone. Demo journals saved to {OUTPUT_ROOT / 'demo'}")
+
+
+@app.command(name="demo-portraits")
+def demo_portraits(
+    persona_slug: str = typer.Option(
+        None, "--persona", help="Generate only one persona by slug (default: all personas)"
+    ),
+    quality: str = typer.Option("medium", "--quality", help="Image quality: low, medium or high"),
+) -> None:
+    """Generate a pencil portrait of each demo persona (OpenAI).
+
+    Written to generated_content/demo/<persona-slug>/portrait.webp. The personas are
+    fictional, and the prompt asks for a face that resembles no real person.
+    """
+    personas = PERSONAS
+    if persona_slug:
+        if persona_slug not in PERSONAS_BY_SLUG:
+            available = ", ".join(p.slug for p in PERSONAS)
+            typer.echo(f"Error: Unknown persona '{persona_slug}'. Available: {available}", err=True)
+            raise typer.Exit(code=1)
+        personas = [PERSONAS_BY_SLUG[persona_slug]]
+    for persona in personas:
+        path = OUTPUT_ROOT / "demo" / persona.slug / "portrait.webp"
+        typer.echo(f"  {persona.name} ...")
+        try:
+            generate_portrait(persona.appearance, path, quality=quality)
+        except (EnvironmentError, OpenAIError) as e:
+            typer.echo(f"Error: {e}", err=True)
+            raise typer.Exit(code=1)
+        typer.echo(f"  Portrait saved -> {path}")
 
 
 @app.command(name="demo-health")

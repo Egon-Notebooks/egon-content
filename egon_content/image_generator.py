@@ -1,4 +1,4 @@
-"""AI image generation for article illustrations using gpt-image-1.
+"""AI image generation for article illustrations, illustrations and persona portraits.
 
 Edit prompts/image_style.txt to update the article image style prompt.
 Edit prompts/pencil_style.txt to update the ad-hoc illustration style prompt.
@@ -20,19 +20,52 @@ _PENCIL_PROMPT_TEMPLATE: str = (
 
 _TARGET_SIZE = (1200, 675)
 
-# gpt-image-1 supported sizes
+IMAGE_MODEL = "gpt-image-2"  # gpt-image-1 was retired by OpenAI
+
+# supported sizes
 _ILLUSTRATION_SIZES = {
     "square": "1024x1024",
     "landscape": "1536x1024",
     "portrait": "1024x1536",
 }
 
-# gpt-image-1 quality values
+# quality values
 _QUALITY_VALUES = {"low", "medium", "high", "auto"}
 
 
 def build_image_prompt(topic: str) -> str:
     return _IMAGE_PROMPT_TEMPLATE.format(topic=topic)
+
+
+_PORTRAIT_PROMPT_TEMPLATE: str = (
+    (_PROMPTS_DIR / "persona_portrait_style.txt").read_text(encoding="utf-8").strip()
+)
+
+
+def build_portrait_prompt(appearance: str) -> str:
+    return _PORTRAIT_PROMPT_TEMPLATE.format(appearance=appearance)
+
+
+def generate_portrait(appearance: str, output_path: Path, quality: str = "medium") -> None:
+    """Generate a square pencil portrait of a fictional demo persona and save it as WEBP.
+
+    Raises:
+        EnvironmentError: if OPENAI_API_KEY is not set.
+        OpenAIError: if the API request fails.
+    """
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise EnvironmentError("OPENAI_API_KEY is not set. Add it to your .env file.")
+    response = OpenAI(api_key=api_key).images.generate(
+        model=IMAGE_MODEL,
+        prompt=build_portrait_prompt(appearance),
+        size=_ILLUSTRATION_SIZES["square"],
+        quality=quality,
+        n=1,
+    )
+    image = Image.open(io.BytesIO(_decode_response(response)))
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    image.save(output_path, format="WEBP")
 
 
 def build_illustration_prompt(description: str) -> str:
@@ -58,7 +91,7 @@ def generate_image(topic: str, output_path: Path) -> None:
     prompt = build_image_prompt(topic)
 
     response = client.images.generate(
-        model="gpt-image-1",
+        model=IMAGE_MODEL,
         prompt=prompt,
         size="1024x1024",
         quality="medium",
@@ -103,7 +136,7 @@ def generate_illustration(
     prompt = build_illustration_prompt(description)
 
     response = client.images.generate(
-        model="gpt-image-1",
+        model=IMAGE_MODEL,
         prompt=prompt,
         size=_ILLUSTRATION_SIZES[size],
         quality=quality,

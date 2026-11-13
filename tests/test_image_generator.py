@@ -83,3 +83,32 @@ class TestGenerateImage:
             generate_image("Joy", output)
 
         assert output.exists()
+
+
+class TestPersonaPortraits:
+    def test_every_persona_has_an_appearance_in_the_prompt(self):
+        from egon_content.demo.personas import PERSONAS
+        from egon_content.image_generator import build_portrait_prompt
+
+        for persona in PERSONAS:
+            assert persona.appearance
+            prompt = build_portrait_prompt(persona.appearance)
+            assert persona.appearance in prompt
+            assert "does not exist" in prompt
+
+    def test_demo_portraits_writes_one_webp_per_persona(self, tmp_path, monkeypatch):
+        from typer.testing import CliRunner
+
+        from egon_content import cli
+        from egon_content.demo.personas import PERSONAS
+
+        monkeypatch.setattr(cli, "OUTPUT_ROOT", tmp_path)
+        monkeypatch.setenv("OPENAI_API_KEY", "test")
+        mock_response = MagicMock()
+        mock_response.data[0].b64_json = _make_png_b64(64, 64)
+        with patch("egon_content.image_generator.OpenAI") as mock_openai_cls:
+            mock_openai_cls.return_value.images.generate.return_value = mock_response
+            result = CliRunner().invoke(cli.app, ["demo-portraits"])
+        assert result.exit_code == 0, result.output
+        for persona in PERSONAS:
+            assert (tmp_path / "demo" / persona.slug / "portrait.webp").exists()
