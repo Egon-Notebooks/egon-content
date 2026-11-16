@@ -102,6 +102,7 @@ def test_export_is_deterministic_marked_and_well_formed(tmp_path):
         "HKQuantityTypeIdentifierHeartRateVariabilitySDNN",
         "HKQuantityTypeIdentifierBodyMass",
         "HKCategoryTypeIdentifierSleepAnalysis",
+        "HKQuantityTypeIdentifierTimeInDaylight",
     } <= types
 
 
@@ -113,3 +114,12 @@ def test_xml_escapes_values():
     t = datetime(2025, 1, 1, 8)
     rec = Record("T", "u", t, t, 'a"<b>')
     assert "&lt;b&gt;" in to_export_xml(PERSONA, [rec])
+
+
+def test_daylight_grows_toward_spring(tmp_path):
+    wb = daily_wellbeing(read_moods(_journal(tmp_path, _alternating_moods())), START, END)
+    by_month: dict[int, float] = defaultdict(float)
+    for r in generate_records(PERSONA, wb):
+        if r.type.endswith("TimeInDaylight"):
+            by_month[r.start.month] += float(r.value)
+    assert by_month[1] < by_month[3]

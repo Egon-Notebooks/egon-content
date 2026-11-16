@@ -22,6 +22,7 @@ class HealthProfile:
     bedtime: float  # hours after 18:00 (5.0 = 23:00)
     vo2max: float  # mL/min·kg
     lean_mass_kg: float | None = None  # only for personas with a smart scale
+    daylight_min: float = 40.0  # minutes in daylight on an average day, across the year
     weigh_ins_per_week: float = 3.0
 
 
@@ -45,6 +46,7 @@ PERSONAS: list[Persona] = [
         appearance="a woman of 29, shoulder-length light brown hair loosely tucked behind one ear, a knitted scarf and a denim jacket, a bicycle and canal houses sketched faintly behind her",
         archetype="Modern Stoic / Journaler",
         health=HealthProfile(
+            daylight_min=50,
             weight_kg=61,
             resting_hr=62,
             hrv_ms=48,
@@ -93,6 +95,7 @@ Emotional arc across the year:
         appearance="a man of 45 with short dark hair graying at the temples, a short beard and tired, kind eyes, wearing a flannel shirt, bookshelves faintly behind him",
         archetype="Therapy-Adjacent",
         health=HealthProfile(
+            daylight_min=30,
             weight_kg=86,
             resting_hr=64,
             hrv_ms=38,
@@ -141,6 +144,7 @@ Emotional arc across the year:
         appearance="a British-Indian woman of 26 with long dark hair tied back, thin round glasses and a loose cardigan, a notebook full of diagrams faintly beside her",
         archetype="PKM Power User",
         health=HealthProfile(
+            daylight_min=25,
             weight_kg=56,
             resting_hr=66,
             hrv_ms=45,
@@ -190,6 +194,7 @@ Emotional arc across the year:
         appearance="a Black British man of 58 with Ghanaian roots, close-cropped graying hair, reading glasses pushed up on his forehead and a cardigan over a collared shirt, garden leaves faintly behind him",
         archetype="Self-Directed Individual",
         health=HealthProfile(
+            daylight_min=60,
             weight_kg=84,
             resting_hr=63,
             hrv_ms=32,

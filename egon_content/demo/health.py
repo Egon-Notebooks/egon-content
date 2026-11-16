@@ -16,6 +16,7 @@ the same file.
     write_export(persona, journal_dir, out_path, start, end)
 """
 
+import math
 import random
 import re
 import zlib
@@ -104,6 +105,8 @@ def _at(d: date, hours: float) -> datetime:
 def generate_records(persona: Persona, wellbeing: dict[date, float]) -> list[Record]:
     h = persona.health
     rng = random.Random(zlib.crc32(persona.slug.encode()))
+    # Daylight has its own random stream, so adding it left every other value unchanged.
+    daylight_rng = random.Random(zlib.crc32(f"{persona.slug}:daylight".encode()))
     records: list[Record] = []
     weight = h.weight_kg
     days = sorted(wellbeing)
@@ -181,6 +184,29 @@ def generate_records(persona: Persona, wellbeing: dict[date, float]) -> list[Rec
                         f"{exercise:.0f}",
                     )
                 )
+
+        # Daylight (Apple Watch light sensor): less in winter and on low days, more at weekends.
+        if wears_watch:
+            season = 1 - 0.45 * math.cos(2 * math.pi * (d.timetuple().tm_yday + 10) / 365)
+            daylight = (
+                h.daylight_min
+                * season
+                * (1 + 0.35 * z)
+                * (1.3 if weekend else 1.0)
+                * daylight_rng.lognormvariate(0, 0.35)
+            )
+            for hour, share in ((12.5, 0.6), (17, 0.4)):
+                minutes = daylight * share
+                if minutes >= 1:
+                    records.append(
+                        Record(
+                            "HKQuantityTypeIdentifierTimeInDaylight",
+                            "min",
+                            _at(d, hour),
+                            _at(d, hour + minutes / 60),
+                            f"{minutes:.0f}",
+                        )
+                    )
 
         # Body: slow weight drift (a little up in low stretches), occasional weigh-ins.
         weight += rng.gauss(0, 0.04) - 0.012 * z
