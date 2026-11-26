@@ -112,3 +112,29 @@ class TestPersonaPortraits:
         assert result.exit_code == 0, result.output
         for persona in PERSONAS:
             assert (tmp_path / "demo" / persona.slug / "portrait.webp").exists()
+
+
+def test_transparent_illustration_asks_for_a_transparent_background(tmp_path, monkeypatch):
+    from egon_content.image_generator import generate_illustration
+
+    monkeypatch.setenv("OPENAI_API_KEY", "test")
+    mock_response = MagicMock()
+    mock_response.data[0].b64_json = _make_png_b64(8, 8)
+    with patch("egon_content.image_generator.OpenAI") as mock_openai_cls:
+        generate = mock_openai_cls.return_value.images.generate
+        generate.return_value = mock_response
+        generate_illustration("a notebook", tmp_path / "n.webp", transparent=True)
+    kwargs = generate.call_args.kwargs
+    assert "Pure white background" in kwargs["prompt"]
+    assert "off-white background" not in kwargs["prompt"]
+    assert PILImage.open(tmp_path / "n.webp").mode == "RGBA"
+
+
+def test_strokes_only_turns_paper_transparent():
+    from egon_content.image_generator import _strokes_only
+
+    img = PILImage.new("RGB", (2, 1), (255, 255, 255))
+    img.putpixel((1, 0), (20, 20, 20))
+    out = _strokes_only(img)
+    assert out.getpixel((0, 0))[3] == 0
+    assert out.getpixel((1, 0))[3] > 200
