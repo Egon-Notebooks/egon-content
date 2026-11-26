@@ -352,6 +352,9 @@ def illustrate(
         "-o",
         help="Output file path (default: generated_content/illustrations/<slug>_<timestamp>.webp)",
     ),
+    transparent: bool = typer.Option(
+        False, "--transparent", help="Transparent background: only the strokes, no paper"
+    ),
 ) -> None:
     """Generate a pencil-sketch illustration from a short description.
 
@@ -370,7 +373,9 @@ def illustrate(
 
     typer.echo(f"Generating pencil illustration: {description!r} ...")
     try:
-        generate_illustration(description, output, size=size, quality=quality)
+        generate_illustration(
+            description, output, size=size, quality=quality, transparent=transparent
+        )
     except ValueError as e:
         typer.echo(f"Error: {e}", err=True)
         raise typer.Exit(code=1)

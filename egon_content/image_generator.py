@@ -104,11 +104,24 @@ def generate_image(topic: str, output_path: Path) -> None:
     image.save(output_path, format="WEBP")
 
 
+def _strokes_only(image: Image.Image, paper: int = 236) -> Image.Image:
+    """Keep the pencil strokes and make the white paper transparent.
+
+    Darkness becomes opacity: pixels at or above *paper* brightness vanish, and the
+    strokes keep their gray tone, so the sketch sits naturally on any page color.
+    """
+    gray = image.convert("L")
+    alpha = gray.point(lambda v: 0 if v >= paper else round(255 * (paper - v) / paper))
+    ink = Image.new("L", image.size, 28)  # near-black ink; tone comes from alpha
+    return Image.merge("RGBA", (ink, ink, ink, alpha))
+
+
 def generate_illustration(
     description: str,
     output_path: Path,
     size: str = "landscape",
     quality: str = "medium",
+    transparent: bool = False,
 ) -> None:
     """Generate a pencil-sketch illustration for the given description.
 
@@ -134,6 +147,13 @@ def generate_illustration(
 
     client = OpenAI(api_key=api_key)
     prompt = build_illustration_prompt(description)
+    if transparent:
+        # gpt-image-2 cannot draw on a transparent background, so ask for pure white
+        # and turn the paper into transparency afterward (see _strokes_only).
+        prompt = prompt.replace(
+            "Clean white or off-white background.",
+            "Pure white background with no paper texture, shadow or border.",
+        )
 
     response = client.images.generate(
         model=IMAGE_MODEL,
@@ -144,6 +164,8 @@ def generate_illustration(
     )
 
     image = Image.open(io.BytesIO(_decode_response(response)))
+    if transparent:
+        image = _strokes_only(image)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fmt = "PNG" if output_path.suffix.lower() == ".png" else "WEBP"
     image.save(output_path, format=fmt)
